@@ -1,0 +1,957 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SiteDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="SiteDBModelStoreContainer">
+          <EntitySet Name="Catagories" EntityType="SiteDBModel.Store.Catagories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ContactMsgs" EntityType="SiteDBModel.Store.ContactMsgs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EscrowAccepts" EntityType="SiteDBModel.Store.EscrowAccepts" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Escrows" EntityType="SiteDBModel.Store.Escrows" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Feedback" EntityType="SiteDBModel.Store.Feedback" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ListingAdditions" EntityType="SiteDBModel.Store.ListingAdditions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Listings" EntityType="SiteDBModel.Store.Listings" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PasswordResets" EntityType="SiteDBModel.Store.PasswordResets" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProfile" EntityType="SiteDBModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Membership" EntityType="SiteDBModel.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_ContactMsgs_Listings" Association="SiteDBModel.Store.FK_ContactMsgs_Listings">
+            <End Role="Listings" EntitySet="Listings" />
+            <End Role="ContactMsgs" EntitySet="ContactMsgs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContactMsgs_UserProfile" Association="SiteDBModel.Store.FK_ContactMsgs_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="ContactMsgs" EntitySet="ContactMsgs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_EscrowAccepts" Association="SiteDBModel.Store.FK_Escrows_EscrowAccepts">
+            <End Role="EscrowAccepts" EntitySet="EscrowAccepts" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_Listings1" Association="SiteDBModel.Store.FK_Escrows_Listings1">
+            <End Role="Listings" EntitySet="Listings" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_UserProfile" Association="SiteDBModel.Store.FK_Escrows_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_UserProfile1" Association="SiteDBModel.Store.FK_Escrows_UserProfile1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_Listings" Association="SiteDBModel.Store.FK_Feedback_Listings">
+            <End Role="Listings" EntitySet="Listings" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_UserProfile" Association="SiteDBModel.Store.FK_Feedback_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_UserProfile1" Association="SiteDBModel.Store.FK_Feedback_UserProfile1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Feedback" EntitySet="Feedback" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ListingAdditions_Listings" Association="SiteDBModel.Store.FK_ListingAdditions_Listings">
+            <End Role="Listings" EntitySet="Listings" />
+            <End Role="ListingAdditions" EntitySet="ListingAdditions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Listings_Catagories" Association="SiteDBModel.Store.FK_Listings_Catagories">
+            <End Role="Catagories" EntitySet="Catagories" />
+            <End Role="Listings" EntitySet="Listings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Listings_UserProfile" Association="SiteDBModel.Store.FK_Listings_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Listings" EntitySet="Listings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PasswordResets_UserProfile" Association="SiteDBModel.Store.FK_PasswordResets_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="PasswordResets" EntitySet="PasswordResets" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Catagories">
+          <Key>
+            <PropertyRef Name="CatId" />
+          </Key>
+          <Property Name="CatId" Type="smallint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="ContactMsgs">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="ContactId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ListingId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EscrowAccepts">
+          <Key>
+            <PropertyRef Name="AcceptId" />
+          </Key>
+          <Property Name="AcceptId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SellerPubkey" Type="varchar" Nullable="false" MaxLength="450" />
+          <Property Name="SellerPrivkey" Type="varchar" MaxLength="3788" />
+          <Property Name="EscrowAddress" Type="varchar" Nullable="false" MaxLength="34" />
+          <Property Name="PinvBuyer" Type="char" Nullable="false" MaxLength="344" />
+          <Property Name="PinvSeller" Type="char" Nullable="false" MaxLength="344" />
+          <Property Name="CreatedDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="AutoReleaseDt" Type="smalldatetime" Nullable="false" />
+          <Property Name="LastAddressBalance" Type="numeric" Precision="16" Scale="8" />
+        </EntityType>
+        <EntityType Name="Escrows">
+          <Key>
+            <PropertyRef Name="EscrowId" />
+          </Key>
+          <Property Name="EscrowId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BuyerId" Type="int" Nullable="false" />
+          <Property Name="SellerId" Type="int" Nullable="false" />
+          <Property Name="BuyerPubkey" Type="varchar" Nullable="false" MaxLength="450" />
+          <Property Name="BuyerPrivkey" Type="varchar" MaxLength="3788" />
+          <Property Name="EicA" Type="char" Nullable="false" MaxLength="106" />
+          <Property Name="EicB" Type="char" Nullable="false" MaxLength="106" />
+          <Property Name="State" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="SellerReleaseDt" Type="smalldatetime" />
+          <Property Name="BuyerReleaseDt" Type="smalldatetime" />
+          <Property Name="AcceptId" Type="int" />
+          <Property Name="SellerFeedbackId" Type="int" />
+          <Property Name="BuyerFeedbackId" Type="int" />
+          <Property Name="ClosedDt" Type="smalldatetime" />
+          <Property Name="ClosedBy" Type="int" />
+          <Property Name="ListingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BuyerDeleteDt" Type="smalldatetime" />
+          <Property Name="SellerDeleteDt" Type="smalldatetime" />
+          <Property Name="ShippingName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ShippingPrice" Type="numeric" Precision="12" Scale="8" />
+          <Property Name="VariationName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Qty" Type="int" />
+        </EntityType>
+        <EntityType Name="Feedback">
+          <Key>
+            <PropertyRef Name="FeedbackId" />
+          </Key>
+          <Property Name="FeedbackId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Stars" Type="int" Nullable="false" />
+          <Property Name="FromUserId" Type="int" Nullable="false" />
+          <Property Name="AboutUserId" Type="int" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" Nullable="false" MaxLength="300" />
+          <Property Name="ListingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="AboutSeller" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ListingAdditions">
+          <Key>
+            <PropertyRef Name="LAId" />
+          </Key>
+          <Property Name="LAId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AdditionType" Type="smallint" Nullable="false" />
+          <Property Name="CreatedDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="Price" Type="numeric" Precision="12" Scale="8" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ListingId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Listings">
+          <Key>
+            <PropertyRef Name="ListingId" />
+          </Key>
+          <Property Name="ListingId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="80" />
+          <Property Name="Description" Type="nvarchar" Nullable="false" MaxLength="3520" />
+          <Property Name="PriceBTC" Type="numeric" Nullable="false" Precision="16" Scale="8" />
+          <Property Name="PriceUSD" Type="money" Nullable="false" />
+          <Property Name="PegCurrency" Type="char" MaxLength="3" />
+          <Property Name="ExpireDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="CatId" Type="smallint" Nullable="false" />
+          <Property Name="PriceCUR" Type="money" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="IsPrivate" Type="bit" Nullable="false" />
+          <Property Name="FeaturedDate" Type="smalldatetime" />
+          <Property Name="QtyAvail" Type="int" />
+          <Property Name="QtySold" Type="int" />
+        </EntityType>
+        <EntityType Name="PasswordResets">
+          <Key>
+            <PropertyRef Name="PWResetId" />
+          </Key>
+          <Property Name="PWResetId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RequestedDt" Type="smalldatetime" Nullable="false" />
+          <Property Name="UsedDt" Type="smalldatetime" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="56" />
+          <Property Name="Email" Type="varchar" Nullable="false" MaxLength="128" />
+          <Property Name="LastModifiedDt" Type="smalldatetime" />
+          <Property Name="SellerScore" Type="decimal" Precision="3" Scale="2" />
+          <Property Name="BuyerScore" Type="decimal" Precision="3" Scale="2" />
+          <Property Name="TotalScore" Type="decimal" Precision="3" Scale="2" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_ContactMsgs_Listings">
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="1" />
+          <End Role="ContactMsgs" Type="SiteDBModel.Store.ContactMsgs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listings">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="ContactMsgs">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContactMsgs_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="ContactMsgs" Type="SiteDBModel.Store.ContactMsgs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ContactMsgs">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_EscrowAccepts">
+          <End Role="EscrowAccepts" Type="SiteDBModel.Store.EscrowAccepts" Multiplicity="0..1" />
+          <End Role="Escrows" Type="SiteDBModel.Store.Escrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EscrowAccepts">
+              <PropertyRef Name="AcceptId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="AcceptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_Listings1">
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Store.Escrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listings">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Store.Escrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="BuyerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_UserProfile1">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Store.Escrows" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="SellerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_Listings">
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="1" />
+          <End Role="Feedback" Type="SiteDBModel.Store.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listings">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="Feedback" Type="SiteDBModel.Store.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_UserProfile1">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="Feedback" Type="SiteDBModel.Store.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="AboutUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ListingAdditions_Listings">
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="1" />
+          <End Role="ListingAdditions" Type="SiteDBModel.Store.ListingAdditions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listings">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="ListingAdditions">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Listings_Catagories">
+          <End Role="Catagories" Type="SiteDBModel.Store.Catagories" Multiplicity="1" />
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Catagories">
+              <PropertyRef Name="CatId" />
+            </Principal>
+            <Dependent Role="Listings">
+              <PropertyRef Name="CatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Listings_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="Listings" Type="SiteDBModel.Store.Listings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Listings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PasswordResets_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.Store.UserProfile" Multiplicity="0..1" />
+          <End Role="PasswordResets" Type="SiteDBModel.Store.PasswordResets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PasswordResets">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SiteDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SiteDBEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Catagories" EntityType="SiteDBModel.Catagory" />
+          <EntitySet Name="EscrowAccepts" EntityType="SiteDBModel.EscrowAccept" />
+          <EntitySet Name="Escrows" EntityType="SiteDBModel.Escrow" />
+          <EntitySet Name="Feedbacks" EntityType="SiteDBModel.Feedback" />
+          <EntitySet Name="Listings" EntityType="SiteDBModel.Listing" />
+          <EntitySet Name="Users" EntityType="SiteDBModel.User" />
+          <AssociationSet Name="FK_Listings_Catagories" Association="SiteDBModel.FK_Listings_Catagories">
+            <End Role="Catagories" EntitySet="Catagories" />
+            <End Role="Listings" EntitySet="Listings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_EscrowAccepts" Association="SiteDBModel.FK_Escrows_EscrowAccepts">
+            <End Role="EscrowAccepts" EntitySet="EscrowAccepts" />
+            <End Role="Escrow" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_Listings1" Association="SiteDBModel.FK_Escrows_Listings1">
+            <End Role="Listings" EntitySet="Listings" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_UserProfile" Association="SiteDBModel.FK_Escrows_UserProfile">
+            <End Role="UserProfile" EntitySet="Users" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Escrows_UserProfile1" Association="SiteDBModel.FK_Escrows_UserProfile1">
+            <End Role="UserProfile" EntitySet="Users" />
+            <End Role="Escrows" EntitySet="Escrows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_UserProfile" Association="SiteDBModel.FK_Feedback_UserProfile">
+            <End Role="UserProfile" EntitySet="Users" />
+            <End Role="Feedback" EntitySet="Feedbacks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_UserProfile1" Association="SiteDBModel.FK_Feedback_UserProfile1">
+            <End Role="UserProfile" EntitySet="Users" />
+            <End Role="Feedback" EntitySet="Feedbacks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Listings_UserProfile" Association="SiteDBModel.FK_Listings_UserProfile">
+            <End Role="UserProfile" EntitySet="Users" />
+            <End Role="Listings" EntitySet="Listings" />
+          </AssociationSet>
+          <EntitySet Name="webpages_Membership" EntityType="SiteDBModel.webpages_Membership" />
+          <AssociationSet Name="FK_UserProfile_webpages_Membership" Association="SiteDBModel.FK_UserProfile_webpages_Membership">
+            <End Role="webpages_Membership" EntitySet="webpages_Membership" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Feedback_Listings" Association="SiteDBModel.FK_Feedback_Listings">
+            <End Role="Listing" EntitySet="Listings" />
+            <End Role="Feedback" EntitySet="Feedbacks" />
+          </AssociationSet>
+          <EntitySet Name="ContactMsgs" EntityType="SiteDBModel.ContactMsg" />
+          <EntitySet Name="PasswordResets" EntityType="SiteDBModel.PasswordReset" />
+          <AssociationSet Name="FK_ContactMsgs_Listings" Association="SiteDBModel.FK_ContactMsgs_Listings">
+            <End Role="Listing" EntitySet="Listings" />
+            <End Role="ContactMsg" EntitySet="ContactMsgs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContactMsgs_UserProfile" Association="SiteDBModel.FK_ContactMsgs_UserProfile">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ContactMsg" EntitySet="ContactMsgs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PasswordResets_UserProfile" Association="SiteDBModel.FK_PasswordResets_UserProfile">
+            <End Role="User" EntitySet="Users" />
+            <End Role="PasswordReset" EntitySet="PasswordResets" />
+          </AssociationSet>
+          <EntitySet Name="ListingAdditions" EntityType="SiteDBModel.ListingAddition" />
+          <AssociationSet Name="FK_ListingAdditions_Listings" Association="SiteDBModel.FK_ListingAdditions_Listings">
+            <End Role="Listing" EntitySet="Listings" />
+            <End Role="ListingAddition" EntitySet="ListingAdditions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Catagory">
+          <Key>
+            <PropertyRef Name="CatId" />
+          </Key>
+          <Property Name="CatId" Type="Int16" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Listings" Relationship="SiteDBModel.FK_Listings_Catagories" FromRole="Catagories" ToRole="Listings" />
+        </EntityType>
+        <EntityType Name="EscrowAccept">
+          <Key>
+            <PropertyRef Name="AcceptId" />
+          </Key>
+          <Property Name="AcceptId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="SellerPubkey" Type="String" Nullable="false" MaxLength="450" Unicode="false" FixedLength="false" />
+          <Property Name="SellerPrivkey" Type="String" MaxLength="3788" Unicode="false" FixedLength="false" />
+          <Property Name="EscrowAddress" Type="String" Nullable="false" MaxLength="34" Unicode="false" FixedLength="false" />
+          <Property Name="PinvBuyer" Type="String" Nullable="false" MaxLength="344" Unicode="false" FixedLength="true" />
+          <Property Name="PinvSeller" Type="String" Nullable="false" MaxLength="344" Unicode="false" FixedLength="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AutoReleaseDt" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Escrow" Relationship="SiteDBModel.FK_Escrows_EscrowAccepts" FromRole="EscrowAccepts" ToRole="Escrow" />
+          <Property Type="Decimal" Name="LastAddressBalance" Precision="16" Scale="8" />
+        </EntityType>
+        <EntityType Name="Escrow">
+          <Key>
+            <PropertyRef Name="EscrowId" />
+          </Key>
+          <Property Name="EscrowId" Type="Guid" Nullable="false" />
+          <Property Name="BuyerId" Type="Int32" Nullable="false" />
+          <Property Name="SellerId" Type="Int32" Nullable="false" />
+          <Property Name="BuyerPubkey" Type="String" Nullable="false" MaxLength="450" Unicode="false" FixedLength="false" />
+          <Property Name="BuyerPrivkey" Type="String" MaxLength="3788" Unicode="false" FixedLength="false" />
+          <Property Name="EicA" Type="String" Nullable="false" MaxLength="106" Unicode="false" FixedLength="true" />
+          <Property Name="EicB" Type="String" Nullable="false" MaxLength="106" Unicode="false" FixedLength="true" />
+          <Property Name="State" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SellerReleaseDt" Type="DateTime" Precision="0" />
+          <Property Name="BuyerReleaseDt" Type="DateTime" Precision="0" />
+          <Property Name="AcceptId" Type="Int32" />
+          <Property Name="SellerFeedbackId" Type="Int32" />
+          <Property Name="BuyerFeedbackId" Type="Int32" />
+          <Property Name="ClosedDt" Type="DateTime" Precision="0" />
+          <Property Name="ClosedBy" Type="Int32" />
+          <Property Name="ListingId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="EscrowAccept" Relationship="SiteDBModel.FK_Escrows_EscrowAccepts" FromRole="Escrow" ToRole="EscrowAccepts" />
+          <NavigationProperty Name="Listing" Relationship="SiteDBModel.FK_Escrows_Listings1" FromRole="Escrows" ToRole="Listings" />
+          <NavigationProperty Name="UserBuyer" Relationship="SiteDBModel.FK_Escrows_UserProfile" FromRole="Escrows" ToRole="UserProfile" />
+          <NavigationProperty Name="UserSeller" Relationship="SiteDBModel.FK_Escrows_UserProfile1" FromRole="Escrows" ToRole="UserProfile" />
+          <Property Type="DateTime" Name="BuyerDeleteDt" Precision="0" />
+          <Property Type="DateTime" Name="SellerDeleteDt" Precision="0" />
+          <Property Type="String" Name="ShippingName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="ShippingPrice" Precision="12" Scale="8" />
+          <Property Type="String" Name="VariationName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Qty" />
+        </EntityType>
+        <EntityType Name="Feedback">
+          <Key>
+            <PropertyRef Name="FeedbackId" />
+          </Key>
+          <Property Name="FeedbackId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Stars" Type="Int32" Nullable="false" />
+          <Property Name="FromUserId" Type="Int32" Nullable="false" />
+          <Property Name="AboutUserId" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" Nullable="false" MaxLength="300" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="UserFrom" Relationship="SiteDBModel.FK_Feedback_UserProfile" FromRole="Feedback" ToRole="UserProfile" />
+          <NavigationProperty Name="UserAbout" Relationship="SiteDBModel.FK_Feedback_UserProfile1" FromRole="Feedback" ToRole="UserProfile" />
+          <Property Type="Guid" Name="ListingId" Nullable="false" />
+          <NavigationProperty Name="Listing" Relationship="SiteDBModel.FK_Feedback_Listings" FromRole="Feedback" ToRole="Listing" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="0" />
+          <Property Type="Boolean" Name="AboutSeller" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Listing">
+          <Key>
+            <PropertyRef Name="ListingId" />
+          </Key>
+          <Property Name="ListingId" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="80" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="3520" Unicode="true" FixedLength="false" />
+          <Property Name="PriceBTC" Type="Decimal" Nullable="false" Precision="16" Scale="8" />
+          <Property Name="PriceUSD" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="PegCurrency" Type="String" MaxLength="3" Unicode="false" FixedLength="true" />
+          <Property Name="ExpireDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CatId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Catagory" Relationship="SiteDBModel.FK_Listings_Catagories" FromRole="Listings" ToRole="Catagories" />
+          <NavigationProperty Name="Escrows" Relationship="SiteDBModel.FK_Escrows_Listings1" FromRole="Listings" ToRole="Escrows" />
+          <NavigationProperty Name="UserProfile" Relationship="SiteDBModel.FK_Listings_UserProfile" FromRole="Listings" ToRole="UserProfile" />
+          <NavigationProperty Name="Feedbacks" Relationship="SiteDBModel.FK_Feedback_Listings" FromRole="Listing" ToRole="Feedback" />
+          <Property Type="Decimal" Name="PriceCUR" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="ContactMsgs" Relationship="SiteDBModel.FK_ContactMsgs_Listings" FromRole="Listing" ToRole="ContactMsg" />
+          <NavigationProperty Name="ListingAdditions" Relationship="SiteDBModel.FK_ListingAdditions_Listings" FromRole="Listing" ToRole="ListingAddition" />
+          <Property Type="Boolean" Name="IsDeleted" Nullable="false" />
+          <Property Type="Boolean" Name="IsPrivate" Nullable="false" />
+          <Property Type="DateTime" Name="FeaturedDate" Precision="0" />
+          <Property Type="Int32" Name="QtyAvail" />
+          <Property Type="Int32" Name="QtySold" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="56" Unicode="true" FixedLength="false" />
+          <Property Name="Email" Type="String" MaxLength="128" Unicode="false" FixedLength="false" Nullable="false" />
+          <Property Name="LastModifiedDt" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="EscrowsBuyer" Relationship="SiteDBModel.FK_Escrows_UserProfile" FromRole="UserProfile" ToRole="Escrows" />
+          <NavigationProperty Name="EscrowsSeller" Relationship="SiteDBModel.FK_Escrows_UserProfile1" FromRole="UserProfile" ToRole="Escrows" />
+          <NavigationProperty Name="FeedbacksFrom" Relationship="SiteDBModel.FK_Feedback_UserProfile" FromRole="UserProfile" ToRole="Feedback" />
+          <NavigationProperty Name="FeedbacksAbout" Relationship="SiteDBModel.FK_Feedback_UserProfile1" FromRole="UserProfile" ToRole="Feedback" />
+          <NavigationProperty Name="Listings" Relationship="SiteDBModel.FK_Listings_UserProfile" FromRole="UserProfile" ToRole="Listings" />
+          <NavigationProperty Name="webpages_Membership" Relationship="SiteDBModel.FK_UserProfile_webpages_Membership" FromRole="User" ToRole="webpages_Membership" />
+          <Property Type="Decimal" Name="SellerScore" Precision="3" Scale="2" />
+          <Property Type="Decimal" Name="BuyerScore" Precision="3" Scale="2" />
+          <Property Type="Decimal" Name="TotalScore" Precision="3" Scale="2" />
+          <NavigationProperty Name="ContactMsgs" Relationship="SiteDBModel.FK_ContactMsgs_UserProfile" FromRole="User" ToRole="ContactMsg" />
+          <NavigationProperty Name="PasswordResets" Relationship="SiteDBModel.FK_PasswordResets_UserProfile" FromRole="User" ToRole="PasswordReset" />
+        </EntityType>
+        <Association Name="FK_Listings_Catagories">
+          <End Role="Catagories" Type="SiteDBModel.Catagory" Multiplicity="1" />
+          <End Role="Listings" Type="SiteDBModel.Listing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Catagories">
+              <PropertyRef Name="CatId" />
+            </Principal>
+            <Dependent Role="Listings">
+              <PropertyRef Name="CatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_EscrowAccepts">
+          <End Role="EscrowAccepts" Type="SiteDBModel.EscrowAccept" Multiplicity="0..1" />
+          <End Role="Escrow" Type="SiteDBModel.Escrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EscrowAccepts">
+              <PropertyRef Name="AcceptId" />
+            </Principal>
+            <Dependent Role="Escrow">
+              <PropertyRef Name="AcceptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_Listings1">
+          <End Role="Listings" Type="SiteDBModel.Listing" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Escrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listings">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.User" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Escrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="BuyerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Escrows_UserProfile1">
+          <End Role="UserProfile" Type="SiteDBModel.User" Multiplicity="1" />
+          <End Role="Escrows" Type="SiteDBModel.Escrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Escrows">
+              <PropertyRef Name="SellerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.User" Multiplicity="1" />
+          <End Role="Feedback" Type="SiteDBModel.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="FromUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_UserProfile1">
+          <End Role="UserProfile" Type="SiteDBModel.User" Multiplicity="1" />
+          <End Role="Feedback" Type="SiteDBModel.Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="AboutUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Listings_UserProfile">
+          <End Role="UserProfile" Type="SiteDBModel.User" Multiplicity="1" />
+          <End Role="Listings" Type="SiteDBModel.Listing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Listings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="String" Name="ConfirmationToken" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsConfirmed" />
+          <Property Type="DateTime" Name="LastPasswordFailureDate" Precision="3" />
+          <Property Type="Int32" Name="PasswordFailuresSinceLastSuccess" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="PasswordChangedDate" Precision="3" />
+          <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PasswordVerificationToken" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="PasswordVerificationTokenExpirationDate" Precision="3" />
+          <NavigationProperty Name="UserProfile" Relationship="SiteDBModel.FK_UserProfile_webpages_Membership" FromRole="webpages_Membership" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserProfile_webpages_Membership">
+          <End Type="SiteDBModel.webpages_Membership" Role="webpages_Membership" Multiplicity="1" />
+          <End Type="SiteDBModel.User" Role="User" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Membership">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Feedback_Listings">
+          <End Type="SiteDBModel.Listing" Role="Listing" Multiplicity="1" />
+          <End Type="SiteDBModel.Feedback" Role="Feedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listing">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="Feedback">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ContactMsg">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Type="Int32" Name="ContactId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Guid" Name="ListingId" Nullable="false" />
+          <NavigationProperty Name="Listing" Relationship="SiteDBModel.FK_ContactMsgs_Listings" FromRole="ContactMsg" ToRole="Listing" />
+          <NavigationProperty Name="UserProfile" Relationship="SiteDBModel.FK_ContactMsgs_UserProfile" FromRole="ContactMsg" ToRole="User" />
+        </EntityType>
+        <EntityType Name="PasswordReset">
+          <Key>
+            <PropertyRef Name="PWResetId" />
+          </Key>
+          <Property Type="Guid" Name="PWResetId" Nullable="false" />
+          <Property Type="DateTime" Name="RequestedDt" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="UsedDt" Precision="0" />
+          <Property Type="Int32" Name="UserId" />
+          <NavigationProperty Name="UserProfile" Relationship="SiteDBModel.FK_PasswordResets_UserProfile" FromRole="PasswordReset" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_ContactMsgs_Listings">
+          <End Type="SiteDBModel.Listing" Role="Listing" Multiplicity="1" />
+          <End Type="SiteDBModel.ContactMsg" Role="ContactMsg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listing">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="ContactMsg">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContactMsgs_UserProfile">
+          <End Type="SiteDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="SiteDBModel.ContactMsg" Role="ContactMsg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ContactMsg">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PasswordResets_UserProfile">
+          <End Type="SiteDBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="SiteDBModel.PasswordReset" Role="PasswordReset" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="PasswordReset">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ListingAddition">
+          <Key>
+            <PropertyRef Name="LAId" />
+          </Key>
+          <Property Type="Int32" Name="LAId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int16" Name="AdditionType" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="0" />
+          <Property Type="Decimal" Name="Price" Precision="12" Scale="8" />
+          <Property Type="String" Name="Description" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Guid" Name="ListingId" Nullable="false" />
+          <NavigationProperty Name="Listing" Relationship="SiteDBModel.FK_ListingAdditions_Listings" FromRole="ListingAddition" ToRole="Listing" />
+        </EntityType>
+        <Association Name="FK_ListingAdditions_Listings">
+          <End Type="SiteDBModel.Listing" Role="Listing" Multiplicity="1" />
+          <End Type="SiteDBModel.ListingAddition" Role="ListingAddition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Listing">
+              <PropertyRef Name="ListingId" />
+            </Principal>
+            <Dependent Role="ListingAddition">
+              <PropertyRef Name="ListingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SiteDBModelStoreContainer" CdmEntityContainer="SiteDBEntities">
+          <EntitySetMapping Name="Catagories">
+            <EntityTypeMapping TypeName="SiteDBModel.Catagory">
+              <MappingFragment StoreEntitySet="Catagories">
+                <ScalarProperty Name="CatId" ColumnName="CatId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EscrowAccepts">
+            <EntityTypeMapping TypeName="SiteDBModel.EscrowAccept">
+              <MappingFragment StoreEntitySet="EscrowAccepts">
+                <ScalarProperty Name="LastAddressBalance" ColumnName="LastAddressBalance" />
+                <ScalarProperty Name="AcceptId" ColumnName="AcceptId" />
+                <ScalarProperty Name="SellerPubkey" ColumnName="SellerPubkey" />
+                <ScalarProperty Name="SellerPrivkey" ColumnName="SellerPrivkey" />
+                <ScalarProperty Name="EscrowAddress" ColumnName="EscrowAddress" />
+                <ScalarProperty Name="PinvBuyer" ColumnName="PinvBuyer" />
+                <ScalarProperty Name="PinvSeller" ColumnName="PinvSeller" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AutoReleaseDt" ColumnName="AutoReleaseDt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Escrows">
+            <EntityTypeMapping TypeName="SiteDBModel.Escrow">
+              <MappingFragment StoreEntitySet="Escrows">
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="VariationName" ColumnName="VariationName" />
+                <ScalarProperty Name="ShippingPrice" ColumnName="ShippingPrice" />
+                <ScalarProperty Name="ShippingName" ColumnName="ShippingName" />
+                <ScalarProperty Name="SellerDeleteDt" ColumnName="SellerDeleteDt" />
+                <ScalarProperty Name="BuyerDeleteDt" ColumnName="BuyerDeleteDt" />
+                <ScalarProperty Name="EscrowId" ColumnName="EscrowId" />
+                <ScalarProperty Name="BuyerId" ColumnName="BuyerId" />
+                <ScalarProperty Name="SellerId" ColumnName="SellerId" />
+                <ScalarProperty Name="BuyerPubkey" ColumnName="BuyerPubkey" />
+                <ScalarProperty Name="BuyerPrivkey" ColumnName="BuyerPrivkey" />
+                <ScalarProperty Name="EicA" ColumnName="EicA" />
+                <ScalarProperty Name="EicB" ColumnName="EicB" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SellerReleaseDt" ColumnName="SellerReleaseDt" />
+                <ScalarProperty Name="BuyerReleaseDt" ColumnName="BuyerReleaseDt" />
+                <ScalarProperty Name="AcceptId" ColumnName="AcceptId" />
+                <ScalarProperty Name="SellerFeedbackId" ColumnName="SellerFeedbackId" />
+                <ScalarProperty Name="BuyerFeedbackId" ColumnName="BuyerFeedbackId" />
+                <ScalarProperty Name="ClosedDt" ColumnName="ClosedDt" />
+                <ScalarProperty Name="ClosedBy" ColumnName="ClosedBy" />
+                <ScalarProperty Name="ListingId" ColumnName="ListingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedbacks">
+            <EntityTypeMapping TypeName="SiteDBModel.Feedback">
+              <MappingFragment StoreEntitySet="Feedback">
+                <ScalarProperty Name="AboutSeller" ColumnName="AboutSeller" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ListingId" ColumnName="ListingId" />
+                <ScalarProperty Name="FeedbackId" ColumnName="FeedbackId" />
+                <ScalarProperty Name="Stars" ColumnName="Stars" />
+                <ScalarProperty Name="FromUserId" ColumnName="FromUserId" />
+                <ScalarProperty Name="AboutUserId" ColumnName="AboutUserId" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Listings">
+            <EntityTypeMapping TypeName="SiteDBModel.Listing">
+              <MappingFragment StoreEntitySet="Listings">
+                <ScalarProperty Name="QtySold" ColumnName="QtySold" />
+                <ScalarProperty Name="QtyAvail" ColumnName="QtyAvail" />
+                <ScalarProperty Name="FeaturedDate" ColumnName="FeaturedDate" />
+                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PriceCUR" ColumnName="PriceCUR" />
+                <ScalarProperty Name="ListingId" ColumnName="ListingId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PriceBTC" ColumnName="PriceBTC" />
+                <ScalarProperty Name="PriceUSD" ColumnName="PriceUSD" />
+                <ScalarProperty Name="PegCurrency" ColumnName="PegCurrency" />
+                <ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
+                <ScalarProperty Name="CatId" ColumnName="CatId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SiteDBModel.User">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
+                <ScalarProperty Name="BuyerScore" ColumnName="BuyerScore" />
+                <ScalarProperty Name="SellerScore" ColumnName="SellerScore" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastModifiedDt" ColumnName="LastModifiedDt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Membership">
+            <EntityTypeMapping TypeName="SiteDBModel.webpages_Membership">
+              <MappingFragment StoreEntitySet="webpages_Membership">
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+                <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordFailuresSinceLastSuccess" ColumnName="PasswordFailuresSinceLastSuccess" />
+                <ScalarProperty Name="LastPasswordFailureDate" ColumnName="LastPasswordFailureDate" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ConfirmationToken" ColumnName="ConfirmationToken" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ContactMsgs">
+            <EntityTypeMapping TypeName="SiteDBModel.ContactMsg">
+              <MappingFragment StoreEntitySet="ContactMsgs">
+                <ScalarProperty Name="ListingId" ColumnName="ListingId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PasswordResets">
+            <EntityTypeMapping TypeName="SiteDBModel.PasswordReset">
+              <MappingFragment StoreEntitySet="PasswordResets">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UsedDt" ColumnName="UsedDt" />
+                <ScalarProperty Name="RequestedDt" ColumnName="RequestedDt" />
+                <ScalarProperty Name="PWResetId" ColumnName="PWResetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ListingAdditions">
+            <EntityTypeMapping TypeName="SiteDBModel.ListingAddition">
+              <MappingFragment StoreEntitySet="ListingAdditions">
+                <ScalarProperty Name="ListingId" ColumnName="ListingId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AdditionType" ColumnName="AdditionType" />
+                <ScalarProperty Name="LAId" ColumnName="LAId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

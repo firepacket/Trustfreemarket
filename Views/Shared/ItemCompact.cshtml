@@ -1,0 +1,100 @@
+﻿@model AnarkRE.Models.ItemCompactView
+@using AnarkRE;
+@using AnarkRE.Models;
+@{
+    Price price = new Price(Model.PriceCUR, Model.PeggedTo);
+    Price sprice = Model.Options.ShippingPrice.HasValue
+        ? new Price(Model.Options.ShippingPrice.Value, Model.PeggedTo)
+        : null;
+    Price total = sprice != null ? price.Add(sprice) : price;
+}
+
+<div class="properties-grid text-center">
+    <div class="property span3" style="margin-left:0px">
+        <div class="image">
+            <div class="content">
+                <a href="@Url.Action("view", "listings", new { id = Model.ListId })"></a>
+                <img src="@Url.Action("images", "listings", new { id = string.Concat(Model.ListId, "_0_m") })" alt="@Model.Title">
+            </div>
+            <!-- /.content -->
+
+            <div class="price" style="font-size: small; background-color: #e6e6e6;">
+                <span style="font-size: large; color: #2f6a48;">
+                    <b>@total.BTC.FormatNumber() BTC </b>
+                </span>(@total.USD.FormatMoney())
+
+            </div>
+            <!-- /.price -->
+            @*   <div class="reduced" style="font-size:small; background-color:@Globals.ScoreColor(Model.SellerScore)">@Model.SellerUser</div>
+                    <!-- /.reduced -->*@
+        </div>
+        <!-- /.image -->
+
+        <div>
+            <span class="lead" style="font-size: large">@Model.Title</span>
+
+            @if (!string.IsNullOrEmpty(Model.Options.VariationChoice))
+        {
+            <span>- @Model.Options.VariationChoice</span>
+            }
+        </div>
+        <!-- /.title -->
+@*        @if (!string.IsNullOrEmpty(Model.Options.VariationChoice))
+        {
+            <div class="row">
+                <div style=" margin-left: 30px">
+                    <div class="location pull-left"></div>
+                    <!-- /.location -->
+                    <div class="pull-right" style="margin-right: 25px;">
+                    <div class="content"></div>
+                </div>
+                </div>
+            </div>
+        }*@
+
+        @if (sprice != null)
+        {
+            
+        <div class="row">
+            <div style="margin-top: 10px; margin-left: 30px; font-size:smaller">
+                <div class="location pull-left">Original Price:</div>
+                <!-- /.location -->
+                <div class="pull-right" style="margin-right: 15px;">
+                    <div class="content">@Model.PriceUSD.FormatMoney()</div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="row">
+            <div style="margin-top: 10px; margin-left: 30px; font-size:smaller">
+                <div class="location pull-left">@Model.Options.ShippingName</div>
+                <!-- /.location -->
+                <div class="pull-right" style="margin-right: 15px;">
+                    <div class="content">+ @sprice.USD.FormatMoney()</div>
+                </div>
+            </div>
+        </div>    
+         
+        <div class="row">
+            <div style="margin-top: 10px; margin-left: 30px; font-size:large; color: #2f6a48;">
+                <div class="location pull-left"><b>Total: </b></div>
+                <!-- /.location -->
+                <div class="pull-right" style="margin-right: 15px;">
+                    <div class="content"><b>@total.USD.FormatMoney()</b></div>
+                </div>
+            </div>
+        </div>         
+            
+        }
+       
+        
+        @*            <div class="area">
+                <span class="key">Area:</span><!-- /.key -->
+                <span class="value">120</span><!-- /.value -->
+            </div><!-- /.area -->*@
+        @*<div class="bedrooms"><div class="content">4</div></div><!-- /.bedrooms -->
+            <div class="bathrooms"><div class="content">3</div></div><!-- /.bathrooms -->*@
+
+
+    </div>
+</div>

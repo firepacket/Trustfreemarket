@@ -1,0 +1,28 @@
+﻿@model IEnumerable<AnarkRE.Models.ListingGridItem>
+
+@using Grid.Mvc.Ajax.Helpers
+
+
+
+@section Head
+{
+    @Styles.Render("~/Content/grid/css")
+
+}
+@section Scripts {
+    @*@Scripts.Render("~/bundles/grid");
+    <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script type="text/javascript" src="~/Scripts/gridmvc.min.js"></script>
+}
+
+<h1 class="page-header">Browsing @Model.Count() active listings</h1>
+<p class="lead">Use the filter icons to refine your search</p>
+
+@*@using (Ajax.BeginForm("SearchUpdateAjax", new AjaxOptions { UpdateTargetId = "gridContent" }))
+{
+	<input type="submit" value="Update" />
+}*@
+
+@{
+    Html.RenderPartial("ListGrid", Model);
+}

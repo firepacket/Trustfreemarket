@@ -1,0 +1,50 @@
+﻿@model AnarkRE.Models.FeedbackModel
+
+<div class="span8">
+<h1 class="page-header">Finalize Transaction</h1>
+<p class="lead">Please leave a rating in order to delete this transaction</p>
+
+    @using (Html.BeginForm("finalize", "escrow", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(s => s.EscrowId)
+        <div class="property-type control-group">
+                        <label class="control-label">
+                            Rating Score (1-5)
+                        </label>
+                        <div class="controls">
+                            <select name="Score" class="chzn-container chzn-container-single chzn-container-single-nosearch">
+                                <option>5</option>
+                                <option>4</option>
+                                <option>3</option>
+                                <option>2</option>
+                                <option>1</option>
+
+                            </select>
+                            @Html.ValidationMessageFor(s => s.Score)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+        
+        <div class="control-group">
+                        <label class="control-label">
+                            Comments
+                        </label>
+                        <div class="controls" style="position:relative; bottom:5px">
+                            @Html.TextAreaFor(s => s.Message)
+                            @Html.ValidationMessageFor(s => s.Message)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+        <a class="btn btn-default pull-left" href="@Url.Action("Index")">Go back</a>
+        <button class="btn btn-primary pull-right">Submit</button>
+    }
+
+    </div>
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/bootstrap-rating-input.js"></script>
+}
+@section Head {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Login.css")" type="text/css">
+}

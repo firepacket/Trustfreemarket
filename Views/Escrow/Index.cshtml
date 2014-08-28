@@ -1,0 +1,28 @@
+﻿@model IEnumerable<EscrowGridView>
+
+@using AnarkRE.Models;
+
+@section Head
+{
+    @Styles.Render("~/Content/grid/css")
+
+}
+@section Scripts {
+    <script type="text/javascript" src="~/Scripts/gridmvc.min.js"></script>
+}
+
+<h1 class="page-header">Open Escrow Transactions</h1>
+
+
+
+
+@{
+    
+
+        <p class="lead">You have @Model.Count() transactions</p>
+    
+        Html.RenderPartial("EscrowGrid", Model);
+    
+}
+
+

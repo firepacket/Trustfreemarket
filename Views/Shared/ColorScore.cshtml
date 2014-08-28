@@ -1,0 +1,26 @@
+﻿@model int
+
+@{
+    string color = "";
+    if (Model >= 5)
+    {
+        color = "#177e41";
+    }
+    else if (Model >= 4)
+    {
+        color = "#5d7e17";
+    }
+    else if (Model >= 3)
+    {
+        color = "#7e7a17";
+    }
+    else if (Model >= 2)
+    {
+        color = "#7e5117";
+    }
+    else if (Model < 2)
+    {
+        color = "#7e2017";
+    }
+}
+@color

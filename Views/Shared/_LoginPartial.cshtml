@@ -1,0 +1,21 @@
+﻿
+@if (Request.IsAuthenticated) {
+<div class="account pull-right">
+    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+        @Html.AntiForgeryToken()
+    <ul class="nav nav-pills">
+        <li>@Html.ActionLink(User.Identity.Name, "manage", "account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage", style = User.IsInRole("admin") ? "color: #ff5e5e" : "color: #49afcd" })</li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+    </ul>
+    }
+</div>
+} else {
+    
+    <div class="account pull-right">
+    <ul class="nav nav-pills">
+        <li>@Html.ActionLink("Register", "register", "account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "login", "account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+</div>
+}
+

@@ -1,0 +1,192 @@
+﻿@model AnarkRE.Models.NewListingModel
+
+<div class="list-your-property-form">
+    <h2 class="page-header">List a new item for sale</h2>
+
+    <div class="content">
+        <div class="row">
+            <div class="span10">
+                <p>
+                    Use a detailed description to avoid potential arbitration issues. <u>Once created listings cannot be changed, only deleted.</u> More pictures, shipping options, and product variations may be added after creation. All listings will stay active for up to @AnarkRE.Globals.ListingDays days or until deleted.
+                </p>
+            </div><!-- /.span8 -->
+        </div><!-- /.row -->
+        <br />
+            @using (Html.BeginForm("create", "listings",
+                FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <div class="row">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="span4">
+                    
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Title
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(s => s.Title)
+                            @Html.ValidationMessageFor(s => s.Title)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Category
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+                        <div class="controls">
+                            @Html.DropDownListFor(s => s.Category, Model.Categories.OrderBy(s => s.Text), "")
+                       
+                            
+                        </div><!-- /.controls -->
+                        @Html.ValidationMessageFor(s => s.Category)
+                    </div><!-- /.control-group -->
+
+                    <div class="property-type control-group">
+                        <label class="control-label">
+                            Peg To
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+                        <div class="controls">
+                            <select name="PegCurrency" class="chzn-container chzn-container-single chzn-container-single-nosearch">
+                                <option>USD</option>
+                                <option>BTC</option>
+                                <option>EUR</option>
+                                <option>GBP</option>
+                                <option>AUD</option>
+                                <option>CAD</option>
+                                <option>CNY</option>
+                                <option>JPY</option>
+                            </select>
+                            @Html.ValidationMessageFor(s => s.PegCurrency)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+
+                    <div class="contract-type control-group">
+                        <label class="control-label">
+                            Price
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+                        <div class="controls">
+                            @Html.TextBoxFor(s => s.Price)
+                            @Html.ValidationMessageFor(s => s.Price)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+
+
+
+
+
+                    <div class="fileupload fileupload-new control-group" data-provides="fileupload"><input type="hidden">
+                        <label class="control-label">
+                            Picture
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+
+                        <div class="input-append">
+                            <div class="uneditable-input" style="width:150px">
+                                <i class="icon-file fileupload-exists"></i>
+                                <span class="fileupload-preview"></span>
+                            </div>
+                                                <span class="btn btn-file">
+                                                    <span class="fileupload-new">Select file</span>
+                                                    <span class="fileupload-exists">Change</span>
+                                                    
+                                                    @*<input type="file" name="Picture">*@
+                                                    @Html.TextBoxFor(s => s.Picture, new { type = "file"})
+                                                    
+                                                </span>
+                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        </div><!-- /.input-append --><p>
+                        @Html.ValidationMessageFor(s => s.Picture)</p>
+
+
+                    </div><!-- .fileupload -->
+                    <br />
+                    
+
+
+                </div><!-- /.span4 -->
+
+                <div class="span6">
+                    
+
+                    
+
+                    <div class="control-group">
+                        <label class="control-label">
+                            Item Description
+                            <span class="form-required" title="This field is required.">*</span>
+                        </label>
+                        <div class="controls" style="position:relative; bottom:5px">
+                            @Html.TextAreaFor(s => s.Description)
+                            @Html.ValidationMessageFor(s => s.Description)
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+                    
+                    <br />
+                    <div class="control-group">
+
+                        <div class="controls">
+                            @Html.CheckBoxFor(m => m.AgreeToTerms, new { @class = "pull-right" }) I have read and agree to the
+                <a href="@Url.Action("terms", "info")">Terms of Service</a>
+                <p>
+                @Html.ValidationMessageFor(s => s.AgreeToTerms)</p>
+                        </div><!-- /.controls -->
+                    </div><!-- /.control-group -->
+
+
+                   <button class="btn btn-primary pull-right">Submit Listing</button>
+                    
+                    
+                </div><!-- /.span4 -->
+                
+            </div><!-- /.row -->
+
+            
+            }
+        
+    </div><!-- /.content -->
+
+
+
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/assets/libraries/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    jQuery.validator.unobtrusive.adapters.add("checkbox", function (options) {
+        if (options.element.tagName.toUpperCase() == "INPUT" && options.element.type.toUpperCase() == "CHECKBOX") {
+            options.rules["required"] = true;
+            if (options.message) {
+                options.messages["required"] = options.message;
+            }
+        }
+    });
+    jQuery.validator.unobtrusive.adapters.add("dropdown", function (options) {
+        if (options.element.tagName.toUpperCase() == "SELECT" && options.element.type.toUpperCase() == "SELECT-ONE") {
+            options.rules["required"] = true;
+            if (options.message) {
+                options.messages["required"] = options.message;
+            }
+        }
+    });
+
+   
+</script>
+<script type="text/javascript">
+    $('.pull-down').each(function () {
+        $(this).css('margin-top', $(this).parent().height() - $(this).height())
+    });
+</script>
+}
+@section Head {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Login.css")" type="text/css">
+    <link rel="stylesheet" href="~/assets/libraries/bootstrap-fileupload/bootstrap-fileupload.css" type="text/css">
+}

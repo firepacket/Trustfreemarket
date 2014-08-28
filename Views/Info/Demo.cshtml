@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Demonstration";
+}
+<h1 class="page-header">Example Demonstration</h1>
+    <span class="lead">Here's how to start an escrow transaction with a seller</span>
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo0.jpg" />
+        <br />
+        <br />
+    </div>
+
+    <div class="span6">
+        <h2 >1. Request purchase of a listing</h2>
+        <p>Once you have found a listing you like, click the "Request Purchase" button.</p>
+        <p>If the seller has configured product variations (color, size, etc) or shipping options you will be able to select your choices here</p>
+
+        <br />
+    </div>
+</div>
+
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo1.jpg" />
+        <br />
+        <br />
+    </div>
+
+    <div class="span6">
+        <h2 >2. Choose a transaction password</h2>
+        <p>This is the password that will encrypt your 2048 bit RSA key that is generated in-browser. The encryption library used is <a href="https://keybase.io/triplesec/triplesec_now_in_python.html">triplesec</a> which chains together Salsa 20, AES, and Twofish algorithms.</p>
+        <p>The "Advanced Variables" tab allows you to see the values of these keys as they are generated.</p>
+        <p><i>This password cannot be recovered!</i></p>
+        <p>Your order details and total including shipping is shown on the right.</p>
+        <p>The other party's feedback score is shown. Buyers and Sellers will each have different feedback scores for both buying and selling.</p>
+        <br />
+    </div>
+
+    
+
+    
+</div>
+
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo2.jpg" />
+        <br />
+        <br />
+    </div>
+
+    <div class="span6">
+        <h2 >3. Notify seller and continue</h2>
+        <p>After the browser gets done doing it's key generation and your request gets processed, you will see this page.</p>
+        <p>The "Session Code" is a MD5 hash (fingerprint) of your unique transaction key.</p>
+        <p>Click on the "Notify Seller" button to <b>email</b> your session key and any other shipping information to the seller.</p>
+        <p><i>We don't provide communications through our server.</i></p>
+        <p>All communication is done directly between both parties via email. These emails can be used as evidence during arbitration.</p>
+        <br />
+    </div>
+</div>
+
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo3.jpg" />
+        <br />
+        <br />
+    </div>
+    <div class="span6">
+        <h2 >4. Return to transaction list and wait</h2>
+        <p>Once you have sent your session code to the seller, you can continue to view your transactions.</p>
+        <p>This page will show the current state of all your transactions and any available actions.</p>
+        <p>Now you will have to wait for the seller to accept your request.</p>
+        <p>Once they do, you will get an email to notify you and you will be able to view the transaction and escrow address</p>
+        <br />
+    </div>
+
+    
+
+    
+</div>
+
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo4.jpg" />
+        <br />
+        <br />
+    </div>
+
+    <div class="span6">
+        <h2 >5. View accepted transaction & send payment</h2>
+        <p>Once the seller has accepted your request, you will be able to view the transaction details.</p>
+        <p><b>Back up this webpage using (File -> Save As) for safe keeping!</b></p>
+        <p>After you type in your transaction password (from step 2) you will be able to see and verify the bitcoin address</p>
+        <p>Send the total bitcoin balance to this address and let the seller know you paid (payment notifications coming soon).</p>
+        <p>Once the seller verifies you have paid into the escrow address, they can deliver the order</p>
+        <p><b>After you receive your order, you must click "Release Funds to Seller" to complete the payment</b> </p>
+        <br />
+    </div>
+
+    
+
+    
+</div>
+
+<hr />
+<div class="row-fluid">
+    <div class="span6">
+        <br />
+        <br />
+        <img src="~/Images/demo5.jpg" />
+        <br />
+        <br />
+    </div>
+
+    <div class="span6">
+        <h2 >6. Advanced / Offline transaction (optional)</h2>
+        <p>What happens if the server goes down?</p>
+        <p>You can manually input the other party's invitation code to gain access to the funds without the server.</p>
+        <p>After pasting in the invitation code, you can click the "Claim Funds" button the Main tab to calculate the private key</p>
+<br />
+        <p><b>As long as both buyer and seller backs up their webpage, they will always be able to complete the transaction between themselves by trading their invite codes!</b> </p>
+        <br />
+    </div>
+
+    
+
+    
+</div>

@@ -1,0 +1,179 @@
+﻿@model AnarkRE.Models.EscrowView[]
+@using AnarkRE.Models;
+@section Scripts {
+
+}
+@section Head {
+<style>
+.padleft {
+    padding-left:25px;
+}
+ .linkwidget {
+background-color:#fff;
+background-size: 270px 1px;
+color: #777;
+list-style: disc;
+list-style-position: inside;
+padding: 10px 0 6px 0;
+padding-left:25px;
+    -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+-moz-box-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+    .linkwidget .leaf
+    {
+        padding-bottom:12px;
+    }
+</style>
+}
+
+
+
+<div class="row">
+    <div class="span9">
+        <h1 class="page-header">Open Escrow Transactions</h1>
+        <p class="lead">Your current transactions are shown below along with their status.</p>
+        <div class="properties-rows">
+            <div class="row">
+                @if (Model.Length == 0)
+                {
+                    <p class="padleft">
+                    <small class="padleft">You have no open transactions.</small>
+                        </p>
+                }
+                @foreach (EscrowView escrow in Model)
+                {
+                <div class="property span9">
+                    <div class="row">
+
+                        <div class="span3">
+                            <div class="content" style="margin: 15px 15px 15px 15px">
+
+                                <div class="image">
+                                    <a href="@Url.Action("view", "listings", new { id = escrow.Item.ListId })">
+                                    <img src="@Url.Action("images", "listings", new { id = escrow.Item.ListId + "_l" })" alt=""></a>
+                                </div>
+
+                                
+                                @*<a href="detail.html"></a>
+                        <img src="assets/img/tmp/property-small-1.png" alt="">*@
+                            </div>
+                            <!-- /.content -->
+                        </div>
+
+
+                        <div class="body span6 text-right">
+                            <div class="title-price row">
+                                <div class="title pull-left" style="padding-left: 45px">
+                                    <h2 class="text-success text-left">@escrow.Item.Title
+</h2>
+                                </div>
+                                <!-- /.title -->
+
+                                <div class="price">
+                                    <span class="text-info"></span>
+                                </div>
+                                <!-- /.price -->
+
+
+
+
+                            </div>
+                            <!-- /.title -->
+
+                            <div class="location text-left">
+                                
+
+                            </div>
+                            <!-- /.location -->
+                            <p>
+                                You are currently waiting for the seller to accept your payment request.
+                        <br />
+                                <button class="btn-link" value="">Learn More</button>
+                            </p>
+                            <div style="margin:0; background-color:transparent; text-align:center">
+                                <a href="@Url.Action("view", new { id = @escrow.EscrowId })" class="btn btn-info " style="margin-top: 5px; ">View Transaction</a>
+                                    </div>
+                            @*                    <div class="area">
+                        <span class="key">Area:</span><!-- /.key -->
+                        <span class="value">120</span><!-- /.value -->
+                    </div><!-- /.area -->
+                    <div class="bedrooms"><div class="content">4</div></div><!-- /.bedrooms -->
+                    <div class="bathrooms"><div class="content">3</div></div><!-- /.bathrooms -->*@
+
+                        </div>
+                        <!-- /.body -->
+
+                        
+                        
+                    </div>
+                </div><!-- /.property -->
+                }
+
+
+            </div><!-- /.row -->
+            
+        </div>
+        <!-- /.properties-rows -->
+        <!--
+<div class="pagination pagination-centered">
+    <ul>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li class="active"><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">next</a></li>
+        <li><a href="#">last</a></li>
+    </ul>
+</div><!-- /.pagination -->
+
+    </div>
+
+    <div class="sidebar span3">
+
+        <!--
+        <div class="ad widget">
+            <h2>Need Help?</h2>
+            <div class="content">
+                
+                <a href="#">
+                    <img src="assets/img/banner/1.gif" alt="Banner"></a>
+                <a href="#">
+                    <img src="assets/img/banner/2.gif" alt="Banner"></a>
+                <a href="#">
+                    <img src="assets/img/banner/3.gif" alt="Banner"></a>
+                <a href="#">
+                    <img src="assets/img/banner/4.gif" alt="Banner"></a>
+            </div>
+            <!-- /.content -->
+        <!--</div>
+    
+        <!-- /.ad -->
+
+
+
+        <div class="widget our-agents">
+            <div class="title padleft">
+                <h2>Helpful Links</h2>
+            </div>
+            <!-- /.title -->
+
+            <div class="content">
+                <ul class="linkwidget">
+
+                    <li class="leaf"><a href="https://en.bitcoin.it/wiki/User:Casascius/Escrow_scheme_draft">Learn more about the Casascius Escrow Scheme</a></li>
+                    <li class="leaf"><a href="contact-us.html">What kind of cryptography is used?</a></li>
+                    <li class="leaf"><a href="faq.html">Performing an escrow transaction offline</a></li>
+                    <li class="leaf"><a href="404.html">What happens if I lose my password?</a></li>
+                </ul>
+
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.our-agents -->
+
+
+
+    </div>
+
+</div>

@@ -1,0 +1,572 @@
+﻿
+@model AnarkRE.Models.EscrowView
+
+@{
+    bool unaccepted = false;
+    if (!Model.IsBuyer && string.IsNullOrEmpty(Model.MyPrivkeyEnc))
+    {
+        unaccepted = true;
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/crypto")
+    @Scripts.Render("~/bundles/bitescrow")
+
+    <script type="text/javascript">
+        $(function () {
+            $("#actionBox").hide();
+            $("#keyhash").text(md5($('@(Model.IsBuyer ? "#pubkey" : "#otherpubkey")').text()));
+
+        });
+
+        function setButtons() {
+            $('#actionBox').show(250);
+        }
+        function decBtnOn() {
+            $('#tsdec').removeClass("disabled");
+            $('#tsdec').addClass("btn-primary");
+            $('#tsdec').addClass("btn-default");
+        }
+        function decBtnOff() {
+            $('#tsdec').addClass("disabled");
+            $('#tsdec').removeClass("btn-primary");
+            $('#tsdec').removeClass("btn-default");
+        }
+
+        $('#withdrawBtn').click(function () {
+
+            var code01 = $('#eic');
+            if (code01.val().length != 106 || (code01.val().substr(0, 5) != 'einva' && code01.val().substr(0, 5) != 'einvb')) {
+                alert('The escrow invitation code is invalid');
+
+                return;
+            }
+
+            var code2 = $('#redeemcode');
+            if (code2.val().length == 0) {
+                alert('You must enter the code from the other party under the Advanced Variables tab in order to claim funds');
+                return;
+            }
+            else if (code2.val().length != 106 || (code2.val().substr(0, 5) != 'einva' && code2.val().substr(0, 5) != 'einvb')) {
+                alert('The invitation code is invalid. Please check its accuracy in the Advanced Variables tab');
+
+                return;
+            }
+
+            var code3 = $('#pinv');
+            if (code3.val().length != 106 || code3.val().substr(0, 5) != 'einvp') {
+                alert('The payment invitation code is invalid');
+
+                return;
+            }
+
+            var redeem = Bitcoin.Escrow.Redeem(code01.val(), code2.val(), code3.val());
+            if (redeem != null) {
+                if (redeem.address != $('#btcaddr').text()) {
+                    alert('ERROR: Code is for the wrong bitcoin address!');
+                    return;
+                }
+                $('#privbtckey').text(redeem.wif);
+                $('#withdrawbtcaddr').text(redeem.address);
+                $('#claimbox').show(800);
+            }
+        });
+
+        $('#tsdec').click(function () {
+            if ($('#tsdec').hasClass("disabled")) {
+                return false;
+            }
+           
+            
+
+            if ($("#tspwd").val().length < 6) {
+                alert("Please enter a password greater than 6 digits");
+                return false;
+            }
+
+            decBtnOff();
+            
+            @if (Model.IsBuyer)
+            {
+            <text>
+            if ($('#encpriv').text().length > 0) {
+                triplesec.decrypt({
+
+                    data: new triplesec.Buffer($('#encpriv').text(), "hex"),
+                    key: new triplesec.Buffer($("#tspwd").val()),
+                    progress_hook: progress_hook
+
+                }, function (err, buff) {
+                    $('#progress-summary').text('');
+                    if (!err) {
+                        var privkey = buff.toString();
+                        $("#privkey").text(privkey);
+
+
+                        var pinv = $('#pinv').val();
+                        if (pinv.length > 0 && pinv.substr(0, 5) != 'einvp') {
+                            crypt = new JSEncrypt();
+                            crypt.setKey(privkey);
+                            pinv = crypt.decrypt(pinv);
+                            $('#pinv').val(pinv);
+                        }
+                        if (pinv.substr(0, 5) != 'einvp') {
+                            alert('The escrow payment code ' + pinv + 'is invalid');
+                            return;
+                        }
+                        else {
+                            
+                            var verify = Bitcoin.Escrow.VerifyPaymentCode($('#eic').val(), pinv);
+                            if (verify.result) {
+                                $('#btcaddr').text(verify.address);
+                                $('#btcaddr').css('color', 'green');
+                                //$('#balance').load('/api/balance/' + $('#btcaddr').text());
+                                setButtons();
+                                $('#passBox').hide(500);
+                                @if (string.IsNullOrEmpty(Model.ReleaseCode))
+                                {
+                                <text>$('#sendnotice').show(200);</text>
+                                }
+                            }
+                            else
+                                alert("Error: The correct bitcoin address could not be verified. For your own safety, do not continue this transaction");
+                            
+                            
+                        }
+                        
+
+
+                    }
+                    else { alert("Decryption failed. Invalid password"); decBtnOn();}
+
+                });
+                
+            }
+            </text>
+            }
+            else
+            {
+                <text>
+            if ($('#encpriv').text().length == 0) {
+                
+                
+                
+
+                var keySize = 2048;
+                crypt = new JSEncrypt({ default_key_size: keySize });
+
+                var dt = new Date();
+                var time = -(dt.getTime());
+                $('#progress-summary').text('Generating 2048 bit RSA key (please be patient).');
+                var wtf = 'Generating 2048 bit RSA key (please be patient)';
+                var load = setInterval(function () {
+                    wtf = wtf + '.';
+                    $('#progress-summary').text(wtf);
+                }, 750);
+                
+
+                crypt.getKey(function () {
+                    clearInterval(load);
+
+                    dt = new Date();
+                    time += (dt.getTime());
+                    $('#progress-summary').text($('#progress-summary').text() + ' Generated in ' + time + ' ms');
+                    $('#privkey').text(crypt.getPrivateKey());
+                    $('#pubkey').text(crypt.getPublicKey());
+                    triplesec.encrypt({
+
+                        data: new triplesec.Buffer($('#privkey').text()),
+                        key: new triplesec.Buffer($("#tspwd").val()),
+                        progress_hook: progress_hook
+
+                    }, function (err, buff) {
+                        $('#progress-summary').text('');
+                        if (!err) {
+                            $("#encpriv").text(buff.toString('hex'));
+
+
+
+                            var code1 = $('#eic');
+                            if (code1.val().length != 106 || (code1.val().substr(0, 5) != 'einva' && code1.val().substr(0, 5) != 'einvb')) {
+                                alert('The escrow invitation code is invalid');
+                                return;
+                            }
+
+                            var payment = Bitcoin.Escrow.CreatePaymentCode(code1.val());
+                            if (payment != null) {
+                                $('#btcaddr').text(payment.address);
+                                $('#sellerbtcaddr').val(payment.address);
+                                $('#pinv').val(payment.invitationP);
+                                $('#balance').load('/api/balance/' + payment.address);
+                            }
+                            else {
+                                alert("Payment code creation failed");
+                                return;
+                            }
+
+                            var sellerpinv = crypt.encrypt(payment.invitationP);
+                            crypt.setPublicKey($('#otherpubkey').text());
+                            var buyerpinv = crypt.encrypt(payment.invitationP);
+
+
+
+                            var data = {
+                                'PubKey': $('#pubkey').text(),
+                                'EncPrivKey': $("#encpriv").text(),
+                                'BitcoinAddr': payment.address,
+                                'PinvEncBuyer': buyerpinv,
+                                'PinvEncSeller': sellerpinv
+                            }
+
+
+                            $token = $('input[name=""__RequestVerificationToken""]').val();
+                            $.ajax({
+                                type: 'POST',
+                                url: '/api/escrow/@Model.EscrowId',
+                                data: data,
+                                dataType: 'JSON',
+                                headers: { RequestVerificationToken: $token },
+                                //headers: { __RequestVerificationToken: $token },
+                                success: function () {
+                                    setButtons();
+                                    $('#passBox').hide(200);
+                                    $('#verifywarning').hide(200);
+                                    $('#sesscode').hide(100);
+                                    $('#esctable').show(100);
+                                    $('#waitnotice').show(300);
+                                },
+                                complete: function () {
+                                },
+                                error: function (jqXhr) {
+                                    //extractErrors(jqXhr, validator);
+                                    alert(JSON.stringify(jqXhr));
+                                }
+                            });
+
+                        }
+                        else { alert("Decryption failed. Invalid password"); decBtnOn(); }
+
+                    });
+                });
+            }
+            else {
+
+                triplesec.decrypt({
+
+                    data: new triplesec.Buffer($('#encpriv').text(), "hex"),
+                    key: new triplesec.Buffer($("#tspwd").val()),
+                    progress_hook: progress_hook
+
+                }, function (err, buff) {
+                    $('#progress-summary').text('');
+                    if (!err) {
+                        var privkey = buff.toString();
+                        $("#privkey").text(privkey);
+
+
+                        var pinv = $('#pinv').val();
+                        if (pinv.length > 0 && pinv.substr(0, 5) != 'einvp') {
+                            crypt = new JSEncrypt();
+                            crypt.setKey(privkey);
+                            pinv = crypt.decrypt(pinv);
+                            $('#pinv').val(pinv);
+                        }
+                        if (pinv.substr(0, 5) != 'einvp') {
+                            alert('The escrow payment code ' + pinv + 'is invalid');
+                            return;
+                        }
+                        else {
+                            setButtons();
+                            $('#passBox').hide(500);
+                            
+                            
+                        }
+
+
+                    }
+                    else {
+                        alert("Decryption failed. Invalid password");
+                        decBtnOn();
+                    }
+
+                });
+            }
+            </text>
+                
+            }
+
+
+            
+
+        });
+
+        function confirmrelease() {
+            return confirm('This will close the transaction and allow the @(Model.IsBuyer ? "seller" : "buyer") to withdraw all coins from escrow. Are you sure?');
+        }
+
+    </script>
+            }
+
+
+
+
+<span>@Html.AntiForgeryToken()</span>
+
+<div class="row">
+    <div class="span9">
+<h1 class="page-header">@(Model.IsBuyer ? "Buyer" : "Seller") Transaction</h1>
+
+<ul class="tabs nav nav-tabs">
+                <li class="active"><a href="#home">Main</a></li>
+                <li class=""><a href="#advanced">Advanced Variables</a></li>
+
+            </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="home">
+                @if (Model.IsBuyer)
+                {
+                <div class="alert alert-info" style="padding-left: 25px; display:none" id="sendnotice">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>Escrow address confirmed!</strong> You may now send your payment to the bitcoin address below. After your have received your order, be sure to come back and release the funds to the seller.
+                    </div>
+                }
+                else if (unaccepted)
+                {
+                    <br />
+                    <p class="" style="padding-left: 25px;" id="verifywarning">
+                        @*<button type="button" class="close" data-dismiss="alert">×</button>*@
+                        <strong>Verify the Session Code with the buyer</strong> before accepting this transaction to ensure security.
+                    </p><br />
+                }
+               
+                
+                @if (!string.IsNullOrEmpty(Model.ReleaseCode))
+                {
+                    <div class="alert alert-success" style="padding-left: 25px;">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>Funds have been released to you!</strong> Claim your funds to display your bitcoin private key.
+                    </div>
+                }
+                
+                    <p class="alert alert-info" id="waitnotice" style="padding-left: 25px; @((!Model.IsBuyer && !unaccepted && string.IsNullOrEmpty(Model.ReleaseCode)) ? "" : "display:none")">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        <strong>Wait for payment from the buyer.</strong> Once you see the funds in the escrow address you may fulfill the order.
+                        <br /><br />
+                        After the buyer receives the order, they will login to release the funds. If the buyer becomes unresponsive or does not release funds, you may contact support for a resolution.
+                    </p>
+                
+                    @*
+                }
+                else
+                {
+                <div class="well well-sm" style="padding-left: 25px;">
+                        
+                        <strong>Always verify</strong> the information below with the other party directly to ensure security!
+                    </div>*@
+                
+
+
+                
+                @if (unaccepted)
+                {
+                    <table class="table table-bordered table-striped" id="sesscode">
+
+            <tbody>
+            <tr>
+                <td>Session Code</td>
+                <td><span id="keyhash"></span></td>
+            </tr>
+                </tbody>
+        </table>
+                }
+                
+                <table class="table table-bordered table-striped" id="esctable" @(unaccepted ? "style=display:none" : "")>
+
+            <tbody>
+            <tr>
+                <td>Escrow Bitcoin Address</td>
+                <td><span id="btcaddr">@(Model.IsBuyer ? "<enter password>" : Model.BitcoinAddress)</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Address Balance</td>
+                <td><span id="balance">@Model.Balance</span>
+                </td>
+            </tr>
+                
+               @* <tr>
+                <td>Auto Release to Seller</td>
+                <td><span id="releasetime">13 days</span>
+                </td>
+            </tr>*@
+            </tbody>
+        </table>
+
+                <div id="passBox">
+                    @if (unaccepted)
+                    {
+                <p class="lead">Enter a password to accept this transaction</p>
+                    }
+                    else
+                    {
+                        <p class="lead">Enter your password to access protected transaction data</p>
+                    }
+                
+                @if (unaccepted)
+                {
+                    <p  style="padding-left: 25px;">
+                        @*<button type="button" class="close" data-dismiss="alert">×</button>*@
+                        <strong>Do not lose your password!</strong> If you forget your password, you will lose access to funds in escrow!
+                    </p><br />
+                }
+                <div>
+                    Password: <input style="width: 300px" type="text" id="tspwd" value="">
+
+                    <button class="btn btn-primary" id="tsdec">@(unaccepted ? "Accept" : "Open") Transaction</button>
+                    @if (unaccepted)
+                    {
+                        
+                        <form action="@Url.Action("release", new { id = Model.EscrowId })" id="declineform" method="post" style="display:inline" name="submit">
+                        @Html.AntiForgeryToken()
+                            <a class="btn btn-link btn-sm" href="javascript:document.getElementById('declineform').submit()">Decline Request</a>
+                        @*<input type="submit" style="color:#005580; background-color:transparent" class="btn btn-link btn-sm" value="Decline Request"/>*@
+                        </form>
+                        
+                   @* <a href="@Url.Action("release", new { id = Model.EscrowId })" class="btn btn-link btn-sm">Decline Request</a>*@
+                        
+                    }
+                    <br />
+                </div>
+
+                <div id="progress-summary" style="padding: 10px;"></div>
+</div>
+
+
+
+                @if (!unaccepted && Model.ClosedBy == null)
+                {
+                    <form action="@Url.Action("release", new { id = Model.EscrowId })" method="post" id="closeform">
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('closeform').submit()"
+                    class="btn btn-danger"
+                    onclick = "if (!confirm('This will close the transaction and allow the @(Model.IsBuyer ? "seller" : "buyer") to withdraw all coins from escrow. Are you sure?')) { return false; }"
+                    id="releaseBtn" 
+                    data-toggle="tooltip"
+                    data-placement="right"
+                    title="Allows the @(Model.IsBuyer ? "seller" : "buyer") access to the entire escrow balance">Close Transaction</a> 
+
+@*                        <input type="submit"
+                            class="btn btn-danger"
+                            onclick = "if (!confirm('This will close the transaction and allow the @(Model.IsBuyer ? "seller" : "buyer") to withdraw all coins from escrow. Are you sure?')) { return false; }"
+                            id="releaseBtn" 
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="Allows the @(Model.IsBuyer ? "seller" : "buyer") access to the entire escrow balance"
+                            value="Close Transaction" />*@
+                    </form>
+                    
+                @*<a href="@Url.Action("release", new { id = Model.EscrowId })"
+                    class="btn btn-danger"
+                    onclick = "if (!confirm('This will close the transaction and allow the @(Model.IsBuyer ? "seller" : "buyer") to withdraw all coins from escrow. Are you sure?')) { return false; }"
+                    id="releaseBtn" 
+                    data-toggle="tooltip"
+                    data-placement="right"
+                    title="Allows the @(Model.IsBuyer ? "seller" : "buyer") access to the entire escrow balance">Close Transaction</a> 
+                *@
+                    }
+                <div id="actionBox" style="display:inline" class="pull-right">
+                    
+                    <button class="btn btn-@((!string.IsNullOrEmpty(Model.ReleaseCode) && Model.ReleaseCode.StartsWith("einv")) ? "primary" : "default")" id="withdrawBtn" data-toggle="tooltip" data-placement="left" title="Attempts to generate the bitcoin private key for fund withdrawal">Claim Funds</button><br />
+                    
+                </div>
+                <a class="btn btn-default pull-right" href="@Url.Action("index", "escrow")">Back to Transactions</a> 
+                
+                <div class="well text-center" id="claimbox" style="display:none; margin-top:60px">
+                    Escrow Bitcoin Address Private Key (WIF):
+                    <h3 id="withdrawbtcaddr" style="display:none"></h3>
+                    <h3 id="privbtckey"></h3>
+
+                    @Html.ActionLink("Delete Transaction", "delete", new { id = Model.EscrowId }, new { @class = "btn btn-danger", onclick = "if (!confirm('You can save this page first as a backup. Are you sure you wish to delete?')) { return false; }" })
+                </div>
+            </div>
+            <div class="tab-pane" id="advanced">
+
+                <ul class="tabs nav nav-tabs">
+                <li class="active"><a href="#escrowvars">Escrow Variables</a></li>
+                <li class=""><a href="#keys">Encryption Keys</a></li>
+
+            </ul>
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="escrowvars">
+
+                <p>
+                    <B>Your invitation code</B><br />
+                    <input style="width:100%" type="text" id="eic" readonly="readonly" value="@Model.Eic"/>
+                    <br />
+                    <small>Keep this code secret. Giving this code to the other party will release the funds. Only do this manually if there is something wrong with the website or you wish to perform the transaction offline.</small>
+                    <br />
+                    <br />
+                    <B>Their invitation code</B><br />
+                    <input style="width:100%" type="text" id="redeemcode" value="@(Model.ReleaseCode ?? "")"/>
+                    <br />
+                    <small>The redemption code (from the other party)</small>
+                    <br />
+                    <br />
+                    <B>Payment invite code</B>
+                    <input style="width:100%" class="input-xxlarge" type="text" id="pinv" readonly="readonly" value="@(Model.PivEnc ?? "")"/>
+                    <br />
+                    <small>This code is shared between both parties, but not the server. It is generated by the seller and encrypted with the buyer's public key before being sent to the server.</small>
+                    <br />
+                    <br />
+                    <B>Escrow Address</B>
+                    <input style="width:100%" type="text" readonly="readonly" id="sellerbtcaddr" value="@(Model.BitcoinAddress ?? "")"/>
+                    <br />
+                    <small>This is the bitcoin address that will hold the funds in escrow (generated by seller)</small>
+                </p>
+                </div>
+            <div class="tab-pane" id="keys">
+                <div>
+                    
+
+                    <B>Other party's public key</B><br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block" id="otherpubkey">@Model.ThierPubkey</pre>
+                    <br />
+                    <B>Unencrypted Private Key</B><br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block" id="privkey"></pre>
+                    <br />
+                    <B>Public Key</B><br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block; vertical-align: top" id="pubkey">@Model.MyPubkey</pre>
+                    <br />
+                    <b>Encrypted Private Key</b><br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block; vertical-align: top" id="encpriv">@Model.MyPrivkeyEnc</pre>
+                </div>
+                </div>
+
+            </div>
+        </div>
+        </div></div>
+
+    
+        <div class="span3 sidebar">
+        <div class="widget our-agents">
+            <div class="title">
+                <h2>@(Model.IsBuyer ? "Seller" : "Buyer")</h2>
+            </div>
+            @Html.Partial("FeedbackBadge", Model.FeedBadge)
+        </div>
+        <div class="widget">
+            <div class="title">
+                <h2>Order Total</h2>
+            </div>
+            @Html.Partial("ItemCompact", Model.Item)
+        </div>
+
+    </div>
+
+
+
+</div>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a8c2eeb3b15f4a5691ecde504a03782d" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="SiteDBModel.Catagory" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteDBModel.EscrowAccept" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteDBModel.Escrow" Width="1.5" PointX="8.5" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteDBModel.Feedback" Width="1.5" PointX="5.25" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteDBModel.Listing" Width="1.5" PointX="11.875" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SiteDBModel.User" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <AssociationConnector Association="SiteDBModel.FK_Listings_Catagories" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Escrows_EscrowAccepts" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Escrows_Listings1" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Escrows_UserProfile" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Escrows_UserProfile1" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Feedback_UserProfile" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Feedback_UserProfile1" ManuallyRouted="false" />
+        <AssociationConnector Association="SiteDBModel.FK_Listings_UserProfile" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SiteDBModel.webpages_Membership" Width="1.5" PointX="1" PointY="10" />
+        <AssociationConnector Association="SiteDBModel.FK_UserProfile_webpages_Membership" />
+        <AssociationConnector Association="SiteDBModel.FK_Feedback_Listings" ></AssociationConnector>
+        <EntityTypeShape EntityType="SiteDBModel.ContactMsg" Width="1.5" PointX="7" PointY="3.25" />
+        <EntityTypeShape EntityType="SiteDBModel.PasswordReset" Width="1.5" PointX="7.9616296943098437" PointY="4.8059323005405874" />
+        <AssociationConnector Association="SiteDBModel.FK_ContactMsgs_Listings" />
+        <AssociationConnector Association="SiteDBModel.FK_ContactMsgs_UserProfile" />
+        <AssociationConnector Association="SiteDBModel.FK_PasswordResets_UserProfile" />
+        <EntityTypeShape EntityType="SiteDBModel.ListingAddition" Width="1.5" PointX="12.625" PointY="9.75" />
+        <AssociationConnector Association="SiteDBModel.FK_ListingAdditions_Listings" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,30 @@
+﻿@model AnarkRE.Models.FeaturedItemView
+@using AnarkRE;
+<div style="max-width:270px;">
+    <div class="image" style="padding-top:2px">
+        <a href="@Url.Action("view", "listings", new { id = @Model.ListId })"></a>
+        <img src="@Url.Action("images", "listings", new { id = string.Concat(Model.ListId, "_0_m") })" alt="@Model.Title">
+        <div class="label pull-right" style=" position:relative; float:right; right:10px; bottom: 5px; background-color:@Globals.ScoreColor(Model.SellerScore); ">@Model.SellerUser</div>
+    
+    </div>
+    <!-- /.image -->
+    
+    <div class="title" style="width:260px; white-space:nowrap; overflow:hidden">
+        <h3><a href="@Url.Action("view", "listings", new { id = @Model.ListId })">@Model.Title</a></h3>
+    </div>
+    <!-- /.title -->
+    <div class="location"><a href="@Url.Action("category", "listings", new { q = Model.Category })">@Model.Category</a></div>
+    <!-- /.location-->
+    <div class="price"></div>
+    <!-- .price -->
+    <div>
+        <div class="pull-left" style="padding-left:10px">@Model.Price.USD.FormatMoney()</div>
+    </div>
+    <div >
+        
+        <div class="pull-right" style="padding-right:10px">@Model.Price.BTC.RoundTo(4).FormatNumber() BTC</div>
+    
+    </div>
+  
+
+</div>

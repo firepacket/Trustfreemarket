@@ -1,0 +1,130 @@
+﻿@model IEnumerable<AnarkRE.Models.EscrowGridView>
+@using AnarkRE;
+@using AnarkRE.Models;
+@using GridMvc.Html;
+
+@{
+        //var grid = new WebGrid(Model,
+        //    canPage: true,
+        //    rowsPerPage: 20,
+        //    selectionFieldName:  "selectedRow",
+        //    ajaxUpdateContainerId: "gridContent");
+
+        //    grid.Pager(WebGridPagerModes.NextPrevious);
+        
+}
+<div class="row">
+<div class="span12">
+<div id="gridContent">
+
+    @Html.Grid(Model).Columns(c =>
+{
+    c.Add(s => s.Id).Titled("").Sanitized(false).Encoded(false).RenderValueAs<EscrowGridView>(s => GridPicture(s.Id));
+
+
+    c.Add(s => s.Title).Titled("Listing").Filterable(true).Sortable(true);
+
+    //c.Add(s => s.Catagory).Filterable(true).Sortable(true);
+
+
+    //c.Add(s => s.PriceBtc).Titled("Price").Sortable(true).Filterable(true)
+    //    .RenderValueAs(s => s.PriceBtc.RoundTo(4) + " BTC (" + s.PriceUsd.FormatMoney() + ")");
+
+    c.Add(s => s.AddressBalance).Titled("Funds").Filterable(true).Sortable(true)
+        .RenderValueAs(s => s.AddressBalance == null ? "-" : s.AddressBalance.Value.RoundTo(4) + " BTC (" + AnarkRE.Bitcoin.BitcoinPriceData.ToFiat(s.AddressBalance.Value, "USD").FormatMoney() + ")");
+
+
+    c.Add(s => s.Party).Titled("You Are").Filterable(true).Sortable(true);
+
+
+    c.Add(s => s.Username).Titled("Other Party").Filterable(true).Sortable(true).Sanitized(false).Encoded(false)
+        .RenderValueAs<EscrowGridView>(s => Score(s.Score, s.Username));
+    c.Add(s => s.CreatedDt).Titled("Created").Sortable(true).Filterable(true).RenderValueAs(item => (DateTime.Now - item.CreatedDt).ToString((DateTime.Now - item.CreatedDt) < TimeSpan.FromDays(1) ? "%h" : "%d") + ((DateTime.Now - item.CreatedDt) < TimeSpan.FromDays(1) ? " hours" : " days") + " ago");
+
+    c.Add(s => s.State).Sortable(true).Filterable(true)
+        .RenderValueAs(s => s.State.ToString() + (s.ClosedBy.HasValue ? " (" + s.ClosedBy.Value.ToString() + ")" : ""));
+
+    c.Add().Sanitized(false).Encoded(false)
+        .RenderValueAs(s => EButtons(s));
+
+
+}).WithPaging(10)
+
+
+</div>
+</div>
+</div>
+
+@helper GridPicture(string id)
+    {
+        <div>
+         <a href="@Url.Action("view", "listings", new { id = id })">
+        <img src="@Url.Action("images", "listings", new { id = id + "_0_s" })" alt=""></a></div>
+    }
+
+@helper EButtons(EscrowGridView item)
+{
+    if (item.State == EscrowState.Closed)
+    {
+        if (item.ClosedBy.Value == EscrowClosedBy.SellerReject || item.ClosedBy.Value == EscrowClosedBy.BuyerCancel)
+        {
+            <form action="@Url.Action("delete", new { id = item.EscrowId })" method="post">
+            @Html.AntiForgeryToken()
+                        <input type="submit"
+                            class="btn btn-danger"
+                            value="Delete"/>
+        </form>  
+            @* @Html.ActionLink("Delete", "delete", new { id = item.EscrowId }, new { @class = "btn btn-danger" }) *@
+        }
+        else 
+        {
+            <form action="@Url.Action("delete", new { id = item.EscrowId })" method="post">
+            @Html.AntiForgeryToken()
+                        <input type="submit"
+                            class="btn btn-danger"
+                            value="Delete"/>
+        </form>    
+            @*@Html.ActionLink("Delete", "delete", new { id = item.EscrowId }, new { @class = "btn btn-danger" })*@
+        }
+        
+        if (item.ClosedBy.Value != EscrowClosedBy.BuyerCancel && item.ClosedBy.Value != EscrowClosedBy.SellerReject
+            && (((item.ClosedBy.Value.ToString().Contains("Buyer") || item.ClosedBy.Value == EscrowClosedBy.Autorelease) && !item.IsBuyer)
+            || (item.ClosedBy.Value.ToString().Contains("Seller") && item.IsBuyer)))
+        {
+            @Html.ActionLink("View", "view", new { id = item.EscrowId }, new { @class = "btn btn-info" })
+        }
+        
+    }
+    else if (item.State == EscrowState.Created)
+    {
+        
+        <form action="@Url.Action("release", new { id = item.EscrowId })" method="post">
+
+                        @Html.AntiForgeryToken()
+                        <input type="submit"
+                            class="btn btn-warning"
+                            onclick = "if (!confirm('Cancel this request?')) { return false; }"
+                            value="@(item.IsBuyer ? "Cancel" : "Reject")"/>
+        </form>                
+        
+        @*
+        @Html.ActionLink((item.IsBuyer ? "Cancel" : "Reject"), "release", new { id = item.EscrowId }, new { @class = "btn btn-warning", onclick = "if (!confirm('Cancel this request?')) { return false; }" })
+        *@
+    
+    
+                        if (!item.IsBuyer)
+                        {
+            @Html.ActionLink("View", "view", new { id = item.EscrowId }, new { @class = "btn btn-info" })
+                        }
+    }
+    else
+    {
+    @Html.ActionLink("View", "view", new { id = item.EscrowId }, new { @class = "btn btn-info" })
+    }
+    
+}
+
+@helper Score(decimal? s, string username)
+{
+    <span style="color:@Globals.ScoreColor(s)">@username (@(s == null ? "?" : s.Value.RoundTo(2).ToString()))</span>
+}

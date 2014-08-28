@@ -1,0 +1,104 @@
+﻿@model List<AnarkRE.Models.FeaturedItemView>
+
+
+
+<div class="row">
+                <div class="span6">
+                    <h2 class="page-header">Buy and Sell Without Trust</h2>
+                    <p>AnArk.it allows users to buy and sell items without having to trust each other, or a third party.</p>
+                    <p>Through the use of browser side cryptography and a client-server model, buyers are able to pay for goods without worrying that the seller will run off with the money, and without trusting a middleman to hold the funds.</p>
+                    <p>This trust free scheme involves sharing multi-part keys among 3 parties using encryption to prevent the server from ever knowing all 3 parts.</p>
+                    <p>AnArk.it does not have the power to keep (or lose) the coins, but can only release the private key to the buyer or seller.</p>
+                    
+                    <p><a href="@Url.Action("demo", "info")" class="btn btn-info">Example Walkthrough</a>
+                        <a href="@Url.Action("browse", "listings")" class="btn btn-primary arrow-right">Browse Listings</a>
+                    </p><br /></div>
+                <div class="span6">
+                    <br /><br />
+                    <iframe width="500" height="281" src="//www.youtube.com/embed/jfT6Dl-iVIc" frameborder="0" allowfullscreen></iframe><br /><br />
+                    @*<iframe src="http://player.vimeo.com/video/61702922" width="500" height="281"></iframe><p><a href="http://vimeo.com/61702922">EVERYBODY WANTS TO KILL BRUCE</a> from <a href="http://vimeo.com/user7408417">Pierre-Alexandre Chauvat</a> on <a href="http://vimeo.com">Vimeo</a>.</p>*@
+                </div>
+</div>
+
+
+
+
+<div class="carousel">
+    <h2 class="page-header">Listing Showcase</h2>
+
+    <div class="content">
+        <a class="carousel-prev" style="display: block; ">Previous</a>
+        <a class="carousel-next" style="display: block; ">Next</a>
+
+        <div class="caroufredsel_wrapper" style="display: block; text-align: start; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 900px; height: 286px; margin: 0px 0px 10px 25px; overflow: hidden; ">
+            <ul style="text-align: left; float: none; position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; margin: 0px; width: 6900px; height: 286px; ">
+            
+           @foreach (var item in Model)
+           {
+               <li>
+               @Html.Partial("FeaturedItem", item)
+               </li>
+           }
+        </ul></div>
+    </div><!-- /.content -->
+</div>
+
+
+<div class="partners">
+<h2 class="page-header">Featured In</h2>
+<div class="content">
+<div class="partner">
+<a href="http://www.forbes.com/sites/cameronkeng/2014/03/20/bitcoin-must-create-a-community-backed-fdic/" target="_blank">
+<img src="@Url.Content("images/forbes.png")" alt="Forbes">
+</a>
+</div> 
+<div class="partner">
+<a href="http://www.moneyandtech.com/ragnar-lifthrasir-coinsummit/" target="_blank">
+<img src="@Url.Content("images/moneytech.png")" alt="Money & Tech">
+</a>
+</div> 
+<div class="partner">
+<a href="http://www.washingtontimes.com/news/2014/mar/7/idaho-lakefront-property-for-sale-in-bitcoin/?page=all" target="_blank">
+<img src="@Url.Content("images/wt.png")" alt="Washington Times">
+</a>
+</div> 
+
+</div> 
+</div>
+
+<br /><br />
+@section BottomWrapper
+{
+    <div class="bottom-wrapper">
+
+        <div class="bottom container">
+            <div class="bottom-inner row">
+                <div class="item span4">
+                    <div class="address decoration"></div>
+                    <h2><a>Listing</a></h2>
+                    <p>List items you wish to sell for bitcoins. Buyers can browse the available listings and request purchase.</p>
+                    @*<a href="#" class="btn btn-primary">Read more</a>*@
+                </div>
+                <!-- /.item -->
+
+                <div class="item span4">
+                    <div class="gps decoration"></div>
+                    <h2><a>Escrow</a></h2>
+                    <p>Buyer sends bitcoins to a 3-party bitcoin address that cannot be spent from until the buyer releases the funds.</p>
+                    @*<a href="#" class="btn btn-primary">Read more</a>*@
+                </div>
+                <!-- /.item -->
+
+                <div class="item span4">
+                    <div class="key decoration"></div>
+                    <h2><a>Spending</a></h2>
+                    <p>The authorized party can withdraw coins from escrow by importing the Bitcoin Private Key into wallet software.</p>
+                    @*<a href="#" class="btn btn-primary">Read more</a>*@
+                </div>
+                <!-- /.item -->
+            </div>
+            <!-- /.bottom-inner -->
+        </div>
+        <!-- /.bottom -->
+    </div>
+}

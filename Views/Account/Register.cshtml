@@ -1,0 +1,125 @@
+﻿@model AnarkRE.Models.RegisterModel
+
+@if (!string.IsNullOrEmpty(ViewBag.Emailed))
+{
+    
+    <div class="span3"></div>
+<div class="span6">
+    <br /><br />
+
+   <div class="alert alert-info">
+       <h2 class="page-header">Confirmation email sent.</h2>
+       <p class="lead">We have sent an email to @ViewBag.Emailed with a confirmation link. You may log into your account after ctivation.</p>
+       <br />
+       <a href="@Url.Action("login")" class="btn btn-info">Log in</a>
+   </div>
+
+
+</div>
+    
+}
+else
+{
+
+<div class="row" >
+    
+    <div class="span8">
+    <h1 class="page-header">Register</h1>
+    <span class="lead">Create a new account by filling out the form below.</span>
+<br /><br />
+
+@using (Html.BeginForm("register", "account", FormMethod.Post, new { role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    
+    @*
+    <div class="form-group">
+    @Html.LabelFor(m => m.UserName)
+        @Html.TextBoxFor(m => m.UserName, new { @class = "control-group", placeholder = "Enter username" })
+  </div>
+    
+    
+    
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>*@
+    
+
+    
+
+    <fieldset>
+        <legend>Registration Form</legend>
+        <div class="row">
+        <div class="span5">
+        <div class="contract-type control-group">
+            <div class="controls">
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { @class = "input-xlarge" })
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "input-xlarge" })<br />
+                <small>* This email will be shared with the buyer or seller</small>
+            </li>
+            </ol>
+</div></div></div>
+            
+        <div class="span4">
+            <div class="contract-type control-group">
+            <div class="controls">
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "input-xlarge" })
+            </li>
+            <li>
+                @Html.LabelFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-xlarge" })
+            </li>
+        </ol>
+                </div>
+            </div></div>
+            </div>
+
+
+      <br />
+        <div class="row">
+        <div class="span9" style="padding-left:25px">
+        @Html.CheckBoxFor(m => m.AgreeToTerms, new { @class = "pull-right checkbox" }) I have read and agree to the
+                <a href="@Html.Action("terms", "info")">Terms and Conditions</a>
+                <br /><br />
+
+        <input class="btn btn-primary" type="submit" value="Register" />
+            </div></div>
+    </fieldset>
+        
+    
+}
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    jQuery.validator.unobtrusive.adapters.add("checkbox", function (options) {
+        if (options.element.tagName.toUpperCase() == "INPUT" && options.element.type.toUpperCase() == "CHECKBOX") {
+            options.rules["required"] = true;
+            if (options.message) {
+                options.messages["required"] = options.message;
+            }
+        }
+    });
+    </script>
+}
+
+@section Head {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Login.css")" type="text/css">
+}

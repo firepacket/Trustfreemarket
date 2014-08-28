@@ -1,0 +1,37 @@
+﻿@model AnarkRE.Models.LocalPasswordModel
+@{
+    
+}
+
+
+    <h1 class="page-header">Manage your account</h1>
+
+
+<p class="message-success">@ViewBag.StatusMessage</p>
+
+<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>
+
+@Html.Partial("_ChangePasswordPartial")
+
+@*@if (ViewBag.HasLocalPassword)
+{
+    @Html.Partial("_ChangePasswordPartial")
+}
+else
+{ 
+    @Html.Partial("_SetPasswordPartial")
+}*@
+
+@*<section id="externalLogins">
+    @Html.Action("RemoveExternalLogins")
+
+    <h3>Add an external login</h3>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@section Head {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Login.css")" type="text/css">
+}

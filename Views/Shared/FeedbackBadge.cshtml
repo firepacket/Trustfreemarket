@@ -1,0 +1,20 @@
+﻿@model AnarkRE.Models.FeedbackBadgeModel
+@using AnarkRE;
+
+<div class="agent text-center">
+    <div class="image" style="border: 2px solid #fff">
+
+        <div class="text-center" style="color:#fff; height:50px; background-color:@Globals.ScoreColor(Model.Score); ">
+            <span style="font-size: 2.5em; line-height: 1.5em">
+                @(Model.Score.HasValue ? Model.Score.Value.RoundTo(1).ToString() : "?")
+            </span>
+        </div>
+    </div>
+    <!-- /.image -->
+    <div class="text-center" style="font-size: large"><u>@Model.Username</u></div>
+    <!-- /.name -->
+    <br />
+    <div class="text-center">Trades: @Model.Sales</div>
+    <!-- /.phone -->
+    @*<div class="email"><a href="#">more info</a></div><!-- /.email -->*@
+</div><!-- /.agent -->

@@ -1,0 +1,55 @@
+﻿@model AnarkRE.Models.LoginModel
+
+
+
+    
+
+
+<div class="row" >
+    <div class="span3"></div>
+    <div class="span5">
+    <h1 class="page-header">Log in</h1>
+
+    <br /><br />
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Log in Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName, new { @class = "input-xlarge" })
+                @Html.ValidationMessageFor(m => m.UserName)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password, new { @class = "input-xlarge" })
+                @Html.ValidationMessageFor(m => m.Password)
+            </li>
+            <li>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </li>
+        </ol>
+        <input type="submit" value="Log in" class="btn btn-primary pull-right"/>
+    </fieldset>
+    <br />
+    <p class="pull-right">
+        @Html.ActionLink("Register", "register") if you don't have an account.
+    </p>
+}
+</div>
+</div>
+@*<section class="social" id="socialLoginForm">
+    <h2>Use another service to log in.</h2>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@section Head {
+    <link rel="stylesheet" href="@Url.Content("~/Content/Login.css")" type="text/css">
+}

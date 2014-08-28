@@ -1,0 +1,681 @@
+﻿@model AnarkRE.Models.ListingView
+@using AnarkRE;
+@using AnarkRE.Models;
+@using WebMatrix.WebData;
+@{
+    MvcHtmlString desc = new MvcHtmlString(HttpUtility.HtmlEncode(Model.Description).Replace(Environment.NewLine, "<br/>"));
+    
+}
+
+<div class="row">
+    <div class="span9">
+        @if (WebSecurity.CurrentUserId == Model.UserId && Model.Additions.Count() == 0)
+        {
+            <br />
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <b>Don't forget!</b> You can add more shipping options and product specifics by clicking the "Configure" tab below.
+
+            </div>
+        }
+
+        <h1 class="page-header">@Model.Title</h1>
+        <br />
+        <div class="carousel property">
+            <div class="preview">
+                <img src="@Url.Action("images", "listings", new { id = Model.ListId + "_0_l" })" alt="">
+            </div>
+            <!-- /.preview -->
+
+            <div class="content">
+
+                <a class="carousel-prev" href="#" style="display: block;">Previous</a>
+                <a class="carousel-next" href="#" style="display: block;">Next</a>
+                <div class="caroufredsel_wrapper" style="display: block; text-align: start; float: none; position: relative; top: auto; right: auto; bottom: auto; left: auto; z-index: auto; width: 660px; height: 75px; margin: 0px 0px 10px 25px; overflow: hidden;">
+                    <ul style="text-align: left; float: none; position: absolute; top: 0px; right: auto; bottom: auto; left: 0px; margin: 0px; width: 5280px; height: 75px;">
+                        <li class="active">
+                            <img src="@Url.Action("images", "listings", new { id = Model.ListId + "_0_l" })" alt="">
+                        </li>
+                        @for (int i = 1; i < Model.PictureCount; i++)
+                        {
+                            <li>
+                                <img src="@Url.Action("images", "listings", new { id = Model.ListId + "_" + i + "_l" })" alt="">
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.carousel -->
+
+        <div class="property-detail">
+
+            @if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+            {
+                <ul class="tabs nav nav-tabs">
+                    <li class="active"><a href="#listingtab">Listing</a></li>
+                    
+                    <li class=""><a href="#custtab">Configure</a></li>
+                    @if (User.IsInRole("admin"))
+                    {
+                    <li class=""><a href="#admintab">Admin</a></li>
+                    }
+                </ul>
+            }
+            <div class="tab-content" >
+
+                <div class="tab-pane active" id="listingtab">
+
+
+                    <div class="pull-left overview">
+                        <div class="row">
+                            <div class="span3">
+                                <p class="lead">Listing Details</p>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>Price:</th>
+                                            <td style="font-size: larger; color: #2f6a48;"><b>@Model.PriceBtc.FormatNumber() BTC</b></td>
+                                        </tr>
+
+                                        <tr>
+                                            <th></th>
+                                            <td>(<b>@Model.PriceUsd.FormatMoney()</b>)</td>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Category:</th>
+                                            <td>@Model.Category</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Listed:</th>
+                                            <td>@Model.Created.ToLongDateString()</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Expires:</th>
+                                            <td>@((Model.ExpireDt - DateTime.Now).ToString("%d") + " days")</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Pegged:</th>
+                                            <td>@Model.PriceCur.RoundTo(2) @Model.PegCurrency</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <br />
+
+                                <div class="well text-center" style="padding: 15px 15px 15px 15px">
+                                    @using (Html.BeginForm("create", "escrow", new { id = @Model.ListId }, FormMethod.Post))
+                                    {
+                                        if (Model.Additions.Any(s => ((ListingAdditionType)s.AdditionType) == ListingAdditionType.SingleSelect))
+                                        {
+                                        <div class="property-type control-group">
+                                            <label class="control-label">
+                                                Select a variation
+                                            </label>
+                                            <div class="controls">
+
+                                                <select name="Variation" class="chzn-container chzn-container-single chzn-container-single-nosearch">
+                                                    <option value="-1">-- No selection --</option>
+                                                    @foreach (ListingAddition la in Model.Additions.Where(s => ((ListingAdditionType)s.AdditionType) == ListingAdditionType.SingleSelect))
+                                                    {
+                                                        <option value="@la.LAId">@la.Name</option>
+                                                    }
+                                                </select>
+
+                                            </div>
+                                            <!-- /.controls -->
+                                        </div>
+                                        <!-- /.control-group --><br />
+                                        }
+
+
+
+                                        if (Model.Additions.Any(s => ((ListingAdditionType)s.AdditionType) == ListingAdditionType.Shipping))
+                                        {
+                                        <div class="property-type control-group">
+                                            <label class="control-label">
+                                                Shipping method
+                                            <span class="form-required" title="This field is required.">*</span>
+                                            </label>
+                                            <div class="controls">
+
+                                                <select name="ShippingSelection" class="chzn-container chzn-container-single chzn-container-single-nosearch">
+                                                    @foreach (ListingAddition la in
+                                                        Model.Additions.Where(s => ((ListingAdditionType)s.AdditionType) == ListingAdditionType.Shipping).OrderBy(x => x.Price))
+                                                    {
+                                                        <option value="@la.LAId">@la.Name - @la.Price.Value.RoundTo(3) @Model.PegCurrency</option>
+                                                    }
+                                                </select>
+
+                                            </div>
+                                            <!-- /.controls -->
+                                        </div>
+                                        <!-- /.control-group --><br />
+                                        }
+
+
+
+                                        <div class="text-center">
+
+                                            @if (!string.IsNullOrEmpty(Model.CurrentUserEscrowId))
+                                            {
+                                                <div class="alert alert-info">
+                                                    You are already purchasing this item
+                                                </div>
+                                        
+                                                <a class="btn btn-lg btn-info" 
+                                            href="@Url.Action("view", "escrow", new { id = @Model.CurrentUserEscrowId })">View Transaction</a>
+                                            }
+                                            else
+                                            {
+@*<a @(WebSecurity.CurrentUserId == Model.UserId ? "style=display:none" : "") class="btn btn-lg btn-primary arrow-right" 
+                                            href="@Url.Action("create", "escrow", new { id = @Model.ListId })">Request Purchase</a>*@
+                                                if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+                                                {
+                                                    if (Model.Additions.Count == 0)
+                                                    {
+                                                       <small>Add shipping methods and product variations under "Add More"</small><br /> <br />
+                                                    }
+
+                                                    if (Model.OpenTransctions > 0)
+                                                    {
+                                                        <div class="alert alert-info">This listing has <b>@Model.OpenTransctions</b> open transactions.</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        
+                                                        
+                                                       
+                                                        
+
+                                
+                                }           
+                                                
+                                                    
+                                                }
+
+                                                if (WebSecurity.CurrentUserId != Model.UserId)
+                                                {
+                                                <button class="btn btn-lg btn-primary arrow-right">Request Purchase</button>
+                                                }
+                                            }
+
+                                        </div>
+                                    }
+
+                                    @if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+                                                {
+
+                                    <form action="@Url.Action("delete", "listings", new { id = Model.ListId })" method="post" id="deleteform">
+                        @Html.AntiForgeryToken()
+                                            @*<img src="~/assets/img/icons/cross.png" />*@
+                                            <input type="submit"
+                            class="btn btn-danger"
+                            onclick = "if (!confirm('This will remove this entire listing forever. Are you sure?')) { return false; }"
+                            value="Delete Listing"/>
+</form> 
+                                    }
+
+                                </div>
+
+                            </div>
+                            <!-- /.span2 -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                    <div style="bottom: 30px;">
+                        <h2>Description</h2>
+                        <p>@Html.Raw(desc)</p>
+                        @foreach (ListingAddition la in Model.Additions.Where(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.Description))
+                        {
+                            <h3>Added on @la.CreatedDate.ToLongDateString() @la.CreatedDate.ToShortTimeString()</h3>
+                            <p>@la.Description</p>
+                        }
+
+
+                    </div>
+
+
+
+                    @*                    <h2>Listing Options</h2>
+
+                    <div class="row">
+                        <ul class="span2">
+                            <li class="checked">
+                                Trustless escrow
+                            </li>
+                            
+                            
+                            <li class="plain">
+                                Extra pictures
+                            </li>
+                        </ul>
+                        <ul class="span2">
+                            <li class="checked">
+                                Verified email
+                            </li>
+                            <li class="plain">
+                                Premium listing
+                            </li>
+                            
+                        </ul>
+                        
+                    </div>*@
+
+                    @*  <h2>Map</h2>
+
+                    <div id="property-map" style="position: relative; background-color: rgb(229, 227, 223); overflow: hidden; "><div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0; " class="gm-style"><div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; width: 100%; cursor: url(https://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; -webkit-transform-origin: 0px 0px; -webkit-transform: matrix(1, 0, 0, 1, 0, 0); "><div style="position: absolute; left: 0px; top: 0px; width: 100%; z-index: 200; "><div style="position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%; "></div></div><div style="position: absolute; left: 0px; top: 0px; width: 100%; z-index: 201; "><div style="position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%; "></div><div style="position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%; "><div style="position: absolute; left: 0px; top: 0px; z-index: -1; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 367px; top: 141px; "><canvas draggable="false" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 111px; top: 141px; ">
+                    <canvas draggable="false" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 367px; top: -115px; "><canvas draggable="false" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 367px; top: 397px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 623px; top: 141px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 111px; top: 397px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 111px; top: -115px; "><canvas draggable="false" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px; " height="256" width="256"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 623px; top: -115px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 623px; top: 397px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 879px; top: 141px; "></div>
+                    <div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -145px; top: 141px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -145px; top: -115px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 879px; top: -115px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: -145px; top: 397px; "></div><div style="width: 256px; height: 256px; overflow: hidden; position: absolute; left: 879px; top: 397px; "></div></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; width: 100%; z-index: 202; "><div style="position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%; "></div><div style="position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%; "></div><div style="position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%; "><div style="position: absolute; visibility: visible; width: 42px; left: 366.12282880046405px; top: 126.88092971616425px; "><div class="marker"><div class="marker-inner"></div></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%; "><div style="position: absolute; left: 0px; top: 0px; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: 141px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 111px; top: 141px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: -115px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: 397px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: 141px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 111px; top: 397px; "></div>
+                    <div style="width: 256px; height: 256px; position: absolute; left: 111px; top: -115px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: -115px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: 397px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: 141px; "></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: 141px; "></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: -115px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: -115px; "></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: 397px; "></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: 397px; "></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 0; "><div style="position: absolute; left: 0px; top: 0px; z-index: 1; "><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: 141px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249557088&amp;src=apiv3&amp;hl=en-US&amp;x=2799&amp;y=6544&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 111px; top: 141px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249557088&amp;src=apiv3&amp;hl=en-US&amp;x=2798&amp;y=6544&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: 141px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249557023&amp;src=apiv3&amp;hl=en-US&amp;x=2800&amp;y=6544&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 111px; top: 397px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249000000&amp;src=apiv3&amp;hl=en-US&amp;x=2798&amp;y=6545&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: -115px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249551571&amp;src=apiv3&amp;hl=en-US&amp;x=2799&amp;y=6543&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 367px; top: 397px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249470627&amp;src=apiv3&amp;hl=en-US&amp;x=2799&amp;y=6545&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: 141px; opacity: 1; -webkit-transition: opacity 200ms ease-out; ">
+                    <img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249000000&amp;src=apiv3&amp;hl=en-US&amp;x=2797&amp;y=6544&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: 397px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249000000&amp;src=apiv3&amp;hl=en-US&amp;x=2797&amp;y=6545&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 111px; top: -115px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249470627&amp;src=apiv3&amp;hl=en-US&amp;x=2798&amp;y=6543&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: -115px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249528989&amp;src=apiv3&amp;hl=en-US&amp;x=2800&amp;y=6543&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 623px; top: 397px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts0.googleapis.com/vt?lyrs=m@249546208&amp;src=apiv3&amp;hl=en-US&amp;x=2800&amp;y=6545&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: 141px; opacity: 1; -webkit-transition: opacity 200ms ease-out; ">
+                    <img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249553920&amp;src=apiv3&amp;hl=en-US&amp;x=2801&amp;y=6544&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: -145px; top: -115px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249408277&amp;src=apiv3&amp;hl=en-US&amp;x=2797&amp;y=6543&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: -115px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249541878&amp;src=apiv3&amp;hl=en-US&amp;x=2801&amp;y=6543&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div><div style="width: 256px; height: 256px; position: absolute; left: 879px; top: 397px; opacity: 1; -webkit-transition: opacity 200ms ease-out; "><img style="width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://mts1.googleapis.com/vt?lyrs=m@249546208&amp;src=apiv3&amp;hl=en-US&amp;x=2801&amp;y=6545&amp;z=14&amp;style=47,37%7Csmartmaps" draggable="false"></div></div></div></div></div><div style="margin-left: 5px; margin-right: 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px; "><a style="position: static; overflow: visible; float: none; display: inline; " target="_blank" href="http://maps.google.com/maps?ll=34.012044,-118.494458&amp;z=14&amp;t=m&amp;hl=en-US&amp;mapclient=apiv3" title="Click to see this area on Google Maps"><div style="width: 62px; height: 26px; cursor: pointer; "><img style="position: absolute; left: 0px; top: 0px; width: 62px; height: 26px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/google_white2.png" draggable="false"></div></a></div><div class="gmnoprint" style="z-index: 1000001; position: absolute; right: 165px; bottom: 0px; width: 213px; "><div draggable="false" style="-webkit-user-select: none; " class="gm-style-cc"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute; "><div style="width: 1px; "></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px; "></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; "><a style="color: rgb(68, 68, 68); text-decoration: none; cursor: pointer; display: none; ">Map Data</a><span style="">Map data ©2014 Cybercity, Google, Sanborn</span></div></div></div><div style="background-color: white; padding: 15px 21px; border: 1px solid rgb(171, 171, 171); font-family: Roboto, Arial, sans-serif; color: rgb(34, 34, 34); -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; z-index: 10000002; display: none; width: 256px; height: 148px; position: absolute; left: 265px; top: 110px; "><div style="padding: 0px 0px 10px; font-size: 16px; ">Map Data</div><div style="font-size: 13px; ">Map data ©2014 Cybercity, Google, Sanborn</div><div style="width: 13px; height: 13px; overflow: hidden; position: absolute; opacity: 0.7; right: 12px; top: 12px; z-index: 10000; cursor: pointer; "><img style="position: absolute; left: -2px; top: -336px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div></div>
+                    <div class="gmnoscreen" style="position: absolute; right: 0px; bottom: 0px; "><div style="font-family: Roboto, Arial, sans-serif; font-size: 11px; color: rgb(68, 68, 68); direction: ltr; text-align: right; background-color: rgb(245, 245, 245); ">Map data ©2014 Cybercity, Google, Sanborn</div></div><div class="gmnoprint gm-style-cc" style="z-index: 1000001; position: absolute; -webkit-user-select: none; right: 95px; bottom: 0px; " draggable="false"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute; "><div style="width: 1px; "></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px; "></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; "><a style="text-decoration: none; cursor: pointer; color: rgb(68, 68, 68); " href="http://www.google.com/intl/en-US_US/help/terms_maps.html" target="_blank">Terms of Use</a></div></div><div draggable="false" style="-webkit-user-select: none; position: absolute; right: 0px; bottom: 0px; " class="gm-style-cc"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute; "><div style="width: 1px; "></div><div style="background-color: rgb(245, 245, 245); width: auto; height: 100%; margin-left: 1px; "></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; "><a target="_new" title="Report errors in the road map or imagery to Google" style="font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); text-decoration: none; position: relative; " href="http://maps.google.com/maps?ll=34.012044,-118.494458&amp;z=14&amp;t=m&amp;hl=en-US&amp;mapclient=apiv3&amp;skstate=action:mps_dialog$apiref:1&amp;output=classic">Report a map error</a></div></div><div class="gmnoprint" style="margin: 5px; -webkit-user-select: none; position: absolute; left: 0px; top: 0px; " draggable="false" controlwidth="78" controlheight="356"><div class="gmnoprint" controlwidth="78" controlheight="80" style="cursor: url(https://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; width: 78px; height: 78px; position: absolute; left: 0px; top: 0px; "><div class="gmnoprint" controlwidth="78" controlheight="80" style="width: 78px; height: 78px; position: absolute; left: 0px; top: 0px; "><div style="visibility: hidden; "><svg style="position: absolute; left: 0px; top: 0px; " version="1.1" overflow="hidden" width="78px" height="78px" viewBox="0 0 78 78"><circle cx="39" cy="39" r="35" stroke-width="3" fill-opacity="0.2" fill="#f2f4f6" stroke="#f2f4f6"></circle><g transform="rotate(0 39 39)"><rect x="33" y="0" rx="4" ry="4" width="12" height="11" stroke="#a6a6a6" stroke-width="1" fill="#f2f4f6"></rect><polyline points="36.5,8.5 36.5,2.5 41.5,8.5 41.5,2.5" stroke-linejoin="bevel" stroke-width="1.5" fill="#f2f4f6" stroke="#000"></polyline></g></svg></div></div><div class="gmnoprint" controlwidth="59" controlheight="59" style="position: absolute; left: 10px; top: 11px; "><div style="width: 59px; height: 59px; overflow: hidden; position: relative; "><img style="position: absolute; left: 0px; top: 0px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"><div style="position: absolute; left: 0px; top: 20px; width: 19.666666666666668px; height: 19.666666666666668px; cursor: pointer; " title="Pan left"></div><div style="position: absolute; left: 39px; top: 20px; width: 19.666666666666668px; height: 19.666666666666668px; cursor: pointer; " title="Pan right"></div><div style="position: absolute; left: 20px; top: 0px; width: 19.666666666666668px; height: 19.666666666666668px; cursor: pointer; " title="Pan up"></div><div style="position: absolute; left: 20px; top: 39px; width: 19.666666666666668px; height: 19.666666666666668px; cursor: pointer; " title="Pan down">
+                    </div></div></div></div><div style="cursor: url(https://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; position: absolute; left: 23px; top: 85px; " controlwidth="32" controlheight="40"><div style="width: 32px; height: 40px; overflow: hidden; position: absolute; left: 0px; top: 0px; "><img style="position: absolute; left: -9px; top: -102px; width: 1028px; height: 214px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout2.png" draggable="false"></div><div style="width: 32px; height: 40px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden; "><img style="position: absolute; left: -107px; top: -102px; width: 1028px; height: 214px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout2.png" draggable="false"></div><div style="width: 32px; height: 40px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden; "><img style="position: absolute; left: -58px; top: -102px; width: 1028px; height: 214px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout2.png" draggable="false"></div><div style="width: 32px; height: 40px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden; "><img style="position: absolute; left: -205px; top: -102px; width: 1028px; height: 214px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/cb_scout2.png" draggable="false"></div></div><div class="gmnoprint" style="opacity: 0.6; display: none; position: absolute; " controlwidth="0" controlheight="0"><div style="width: 22px; height: 22px; overflow: hidden; position: absolute; cursor: pointer; " title="Rotate map 90 degrees"><img style="position: absolute; left: -38px; top: -360px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div></div><div class="gmnoprint" style="position: absolute; left: 27px; top: 130px; " controlwidth="25" controlheight="226"><div style="width: 23px; height: 24px; overflow: hidden; position: relative; cursor: pointer; z-index: 1; " title="Zoom in"><img style="position: absolute; left: -17px; top: -400px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div><div style="width: 25px; height: 178px; overflow: hidden; position: relative; cursor: pointer; top: -4px; " title="Click to zoom"><img style="position: absolute; left: -17px; top: -87px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div><div style="width: 21px; height: 14px; overflow: hidden; position: absolute; -webkit-transition: top 0.25s ease; z-index: 2; cursor: url(https://maps.gstatic.com/mapfiles/openhand_8_8.cur), default; left: 2px; top: 76px; " title="Drag to zoom"><img style="position: absolute; left: 0px; top: -384px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div><div style="width: 23px; height: 23px; overflow: hidden; position: relative; cursor: pointer; top: -4px; z-index: 3; " title="Zoom out"><img style="position: absolute; left: -17px; top: -361px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; " src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png" draggable="false"></div></div></div>
+                    <div class="gmnoprint" style="margin: 5px; z-index: 0; position: absolute; cursor: pointer; right: 0px; top: 0px; "><div style="float: left; " class="gm-style-mtc"><div style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 1px 6px; border-bottom-left-radius: 2px; border-top-left-radius: 2px; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid rgba(0, 0, 0, 0.14902); -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; min-width: 22px; font-weight: 500; " draggable="false" title="Show street map">Map</div><div style="background-color: white; z-index: -1; padding-top: 2px; -webkit-background-clip: padding-box; background-clip: padding-box; border-width: 0px 1px 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-right-color: rgba(0, 0, 0, 0.14902); border-bottom-color: rgba(0, 0, 0, 0.14902); border-left-color: rgba(0, 0, 0, 0.14902); -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; position: absolute; left: 0px; top: 24px; text-align: left; display: none; "><div style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 3px 8px 3px 5px; direction: ltr; text-align: left; white-space: nowrap; " draggable="false" title="Show street map with terrain"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; background-color: rgb(255, 255, 255); border: 1px solid rgb(198, 198, 198); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; width: 13px; height: 13px; vertical-align: middle; "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden; display: none; "><img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; width: 68px; height: 67px; " src="https://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">Terrain</label></div></div></div><div style="float: left; " class="gm-style-mtc"><div style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(86, 86, 86); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 1px 6px; border-bottom-right-radius: 2px; border-top-right-radius: 2px; -webkit-background-clip: padding-box; background-clip: padding-box; border-width: 1px 1px 1px 0px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-top-color: rgba(0, 0, 0, 0.14902); border-right-color: rgba(0, 0, 0, 0.14902); border-bottom-color: rgba(0, 0, 0, 0.14902); -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; min-width: 38px; " draggable="false" title="Show satellite imagery">Satellite</div><div style="background-color: white; z-index: -1; padding-top: 2px; -webkit-background-clip: padding-box; background-clip: padding-box; border-width: 0px 1px 1px; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-right-color: rgba(0, 0, 0, 0.14902); border-bottom-color: rgba(0, 0, 0, 0.14902); border-left-color: rgba(0, 0, 0, 0.14902); -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; position: absolute; right: 0px; top: 24px; text-align: left; display: none; "><div style="color: rgb(184, 184, 184); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 3px 8px 3px 5px; direction: ltr; text-align: left; white-space: nowrap; display: none; " draggable="false" title="Zoom in to show 45 degree view"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; background-color: rgb(255, 255, 255); border: 1px solid rgb(241, 241, 241); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; width: 13px; height: 13px; vertical-align: middle; "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden; display: none; ">
+                    <img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; width: 68px; height: 67px; " src="https://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">45°</label></div><div style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; background-color: rgb(255, 255, 255); padding: 3px 8px 3px 5px; direction: ltr; text-align: left; white-space: nowrap; " draggable="false" title="Show imagery with street names"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; background-color: rgb(255, 255, 255); border: 1px solid rgb(198, 198, 198); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; width: 13px; height: 13px; vertical-align: middle; "><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden; "><img style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; width: 68px; height: 67px; " src="https://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false"></div></span><label style="vertical-align: middle; cursor: pointer; ">Labels</label></div></div></div></div></div></div><!-- /#property-map -->
+                *@
+
+                </div>
+
+                <div class="tab-pane" id="custtab">
+
+                    @if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+                    {
+
+                        
+
+
+                        <h2 style="line-height: 20px">Configure your listing</h2>
+                        
+                        <span>For now, all additions are permanent! If you mess up, you must re-create your listing.</span>
+                        <br />
+                        <br />
+                        
+                        
+                        <div class="row">
+                            <div class="span3 well" style="padding: 5px 0 15px 15px">
+
+                                <h4>Add a Picture</h4>
+                                @using (Html.BeginForm("addpic", "listings", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(s => s.ListId)
+                                    <div class="fileupload fileupload-new control-group" data-provides="fileupload">
+                                        <input type="hidden">
+                                        <label class="control-label">
+                                            <i>You are using @Model.PictureCount out of @Globals.MaxPictures pictures.</i>
+                                        </label>
+                                        <br />
+                                        <div class="input-append">
+                                            <div class="uneditable-input">
+                                                <i class="icon-file fileupload-exists"></i>
+                                                <span class="fileupload-preview"></span>
+                                            </div>
+                                            <span class="btn btn-file">
+
+
+                                                @*<input type="file" name="Picture">*@
+                                                @Html.TextBoxFor(s => s.BaseListing.Picture, new { type = "file" })
+                                                <span class="fileupload-new">Select file</span>
+                                                <span class="fileupload-exists">Change</span>
+                                            </span>
+                                            <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                        </div>
+                                        <!-- .fileupload -->
+                                        <br />
+                                        <br />
+
+                                    </div>
+                                    <!-- /.input-append -->
+                                    <p>
+                                        @Html.ValidationMessageFor(s => s.BaseListing.Picture)
+                                    </p>
+                                    <button class="btn btn-info">Upload New Picture</button>
+                                }
+                            </div>
+
+                            <div class="span3 well" style="padding: 5px 0px 15px 15px">
+                                <h4>Append Description</h4>
+                                <i>You have appended @Model.Additions.Count(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.Description) out of @Globals.ListAddOpts[ListingAdditionType.Description] times</i>
+                                @using (Html.BeginForm("append", "listings", new { id = Model.ListId }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                
+                                    <div class="control-group">
+                                        <label class="control-label">
+                                            Description
+                                        </label>
+                                        <div class="controls">
+                                            @Html.TextArea("descadd", null, new { @class = "chzn-container", style = "height: 100px" })
+                                        </div>
+                                        <!-- /.controls -->
+                                    </div>
+                                    <!-- /.control-group -->
+                        
+                        
+                                    <button class="btn btn-info">Add to Description</button>
+                                }
+                            </div>
+
+
+                        </div>
+                        <br />
+                        <br />
+                        
+                        <div class="row">
+
+
+
+                            <div class="span3 well" style="padding: 5px 0 15px 15px">
+                                <h4>Add shipping methods</h4>
+                                <i>You have set @Model.Additions.Count(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.Shipping) of @Globals.ListAddOpts[ListingAdditionType.Shipping] shipping methods</i>
+                                @using (Html.BeginForm("addition", "listings", new { id = Model.ListId }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("latype", ListingAdditionType.Shipping)
+                                    <div class="control-group">
+                                        <label class="control-label">
+                                            Shipping Name
+                                        </label>
+                                        <div class="controls">
+                                            @Html.TextBox("name", null, new { @class = "chzn-container" })
+                                        </div>
+                                        <!-- /.controls -->
+                                    </div>
+                                    <!-- /.control-group -->
+                        
+                                    <div class="contract-type control-group">
+                                        <label class="control-label">
+                                            Price (@Model.PegCurrency)
+                                        </label>
+                                        <div class="controls">
+                                            @Html.TextBox("price", null, new { @class = "input-small" })
+
+                                        </div>
+                                        <!-- /.controls -->
+                                    </div>
+                                    <!-- /.control-group -->
+                        
+                                    <button class="btn btn-info">Add Shipping Method</button>
+                                }
+                            </div>
+
+                            <div class="span3 well" style="padding: 5px 0px 15px 15px">
+                                <h4>Add a variation</h4>
+                                <i>You have added @Model.Additions.Count(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.SingleSelect) of @Globals.ListAddOpts[ListingAdditionType.SingleSelect] variations</i>
+                                @using (Html.BeginForm("addition", "listings", new { id = Model.ListId }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("latype", ListingAdditionType.SingleSelect)
+                                    <div class="control-group">
+                                        <label class="control-label">
+                                            Option Name
+                                        </label>
+                                        <div class="controls" style="padding-right:15px">
+                                            @Html.TextBox("name", null, new { @class = "chzn-container" })
+                                        </div>
+                                        <!-- /.controls -->
+                                    </div>
+                                    <!-- /.control-group -->
+                        
+                                    @Html.Hidden("price", 0)
+                        
+                                    <button class="btn btn-info">Add Variation</button>
+                                }
+                            </div>
+
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                        </div>
+                    }
+                </div>
+
+                @if (User.IsInRole("admin"))
+                {
+                <div class="tab-pane" id="admintab">
+                    <h2 style="line-height: 20px">Administration</h2>
+                        
+                        <span>Site administration functionality for moderation</span>
+                        <br />
+                        <br />
+                    <div class="row">
+                        <div class="span3 well" style="padding: 5px 0px 15px 15px">
+                                <h4>Make featured listing</h4>
+                                <i>@(Model.FeaturedDate.HasValue ? "Featured on " + Model.FeaturedDate.Value.ToShortDateString() : "Not currently featured")</i>
+                                @using (Html.BeginForm("feature", "listings", new { id = Model.ListId }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <br />
+                                    <div class="control-group">
+                                 
+                                        <div class="controls" style="padding-right:15px">
+                                            @Html.CheckBox("featured", Model.FeaturedDate.HasValue, new { @class = "chzn-container" }) Show as featured listing
+                                        </div>
+                                        <!-- /.controls -->
+                                    </div>
+                                    <!-- /.control-group -->
+                        <br />
+                        
+                                    <button class="btn btn-info">Update</button>
+                                }
+                            </div>
+                    </div>
+                </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+    <div class="sidebar span3">
+        <div class="widget our-agents">
+            <div class="title">
+                <h2>Seller</h2>
+            </div>
+            <!-- /.title -->
+
+            @*    <div class="content">
+        <div class="agent text-center">
+            <div class="image" style="border:2px solid #fff">
+                
+                <div class="text-center" style="color:#fff; height:50px; background-color:@Globals.ScoreColor(Model.FeedbackScore); "><span style="font-size:2.5em; line-height:1.5em">@(Model.FeedbackScore.HasValue ? Model.FeedbackScore.Value.RoundTo(1).ToString() : "?")</span></div>
+            </div><!-- /.image -->
+            <div  class="text-center" style="font-size:x-large"><u>@Model.Username</u></div><!-- /.name -->
+            <br />
+            <div  class="text-center" >Sales: @Model.Sales</div><!-- /.phone -->
+          
+        </div><!-- /.agent -->*@
+            @Html.Partial("FeedbackBadge", Model.FeedBadge)
+
+            <div class="widget properties last">
+                <div class="title">
+                </div>
+                <!-- /.title -->
+
+                <div class="content">
+
+                    @foreach (FeedbackView fbv in Model.Feedback)
+                    {
+                        <div class="property" style="background-color: #E6E6E6">
+                            <div class="image" style="width: 50px; background-color: #E6E6E6; font-weight: 900">
+                                <br />
+                                <div class="text-center" style="height:100%; font-size:2em; color:@Globals.ScoreColor(fbv.Score)">@fbv.Score</div>
+                            </div>
+                            <!-- /.image -->
+
+                            <div class="wrapper" style="text-align: center">
+                                <div class="title">
+
+                                    <u>@fbv.Username</u>
+
+                                    <small class="text-primary">- @fbv.Date.ToShortDateString()</small><!-- /.location -->
+                                </div>
+                                <!-- /.title -->
+
+                                <p class="location" style="margin-left: 15px; margin-right: 10px;">&quot; @fbv.Message &quot;</p>
+                                <!-- /.price -->
+                            </div>
+                            <!-- /.wrapper -->
+                        </div>
+                        <!-- /.property -->
+                    }
+
+                    @if (Model.Feedback.Count == 0)
+                    {
+                        <small>No feedback for @Model.FeedBadge.Username</small>
+                    }
+
+                </div>
+                <!-- /.content -->
+            </div>
+            <!-- /.properties -->
+
+
+        </div>
+        <!-- /.content -->
+        <!-- /.our-agents -->
+
+        @if (Model.HasContacted.HasValue && WebSecurity.CurrentUserId != Model.UserId)
+        {
+
+            <div class="widget contact">
+                <div class="title">
+                    <h2 class="block-title">Contact Seller</h2>
+
+                </div>
+                <!-- /.title -->
+
+                <div class="content">
+
+                    @if (!Model.HasContacted.Value)
+                    {
+                        <form method="post" action="@Url.Action("message", new { id = Model.ListId })">
+                           
+                            @*            <div class="control-group">
+                <label class="control-label" for="inputName">
+                    Name
+    <span class="form-required" title="This field is required.">*</span>
+                </label>
+                <div class="controls">
+                    <input type="text" id="inputName">
+                </div>
+                <!-- /.controls -->
+            </div>
+            <!-- /.control-group -->*@
+
+                            @Html.AntiForgeryToken()
+                            <div class="control-group">
+                                <label class="control-label" for="msg">
+                                    Message<br />
+                                    <small>Your email will be included.</small>
+                                </label>
+
+                                <div class="controls">
+                                    <textarea id="msg" name="msg"></textarea>
+                                </div>
+                                <!-- /.controls -->
+                            </div>
+                            <!-- /.control-group -->
+
+                            <div class="form-actions">
+                                <input type="submit" class="btn btn-default arrow-right" style="color: #111" value="Send">
+                            </div>
+                            <!-- /.form-actions -->
+                        </form>
+                        <br />
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">Your message was sent.</div>
+                        <div class="well">The seller will respond by email directly</div>
+                    }
+
+                </div>
+                <!-- /.content -->
+            </div>
+            <!-- /.widget -->
+        }
+@*                <div class="widget">
+                    <div class="title">
+                            <h2 class="block-title">Add a Picture</h2>
+
+                        </div>
+                        <!-- /.title -->
+
+               @if (WebSecurity.CurrentUserId == Model.UserId)
+                {
+                    
+                        
+                    <div class="content" style="background-color: #e6e6e6; padding: 15px">
+
+                        <ul class="tabs nav nav-tabs">
+                            <li class="active"><a href="#pics">Pictures</a></li>
+                            <li class=""><a href="#shipping">Shipping</a></li>
+
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane active" id="pics">
+                            </div>
+                            <div class="tab-pane" id="shipping">
+                            </div>
+                        </div>
+
+
+
+                    </div>
+  
+                    
+                }*@
+
+    </div>
+
+</div>
+    
+
+@section Scripts {
+    <script type="text/javascript" src="~/assets/js/carousel.js"></script>
+    @if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+    {
+    <script type="text/javascript" src="~/assets/libraries/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+    }
+    @*<script type="text/javascript" src="~/assets/libraries/iosslider/_src/jquery.iosslider.min.js"></script>*@
+<script type="text/javascript">
+    $('.pull-down').each(function () {
+        $(this).css('margin-top', $(this).parent().height() - $(this).height())
+    });
+</script>
+}
+
+@section Head {
+    @if (WebSecurity.CurrentUserId == Model.UserId || User.IsInRole("admin"))
+    {
+    <link rel="stylesheet" href="~/assets/libraries/bootstrap-fileupload/bootstrap-fileupload.css" type="text/css">
+    }
+<style type="text/css">
+    .control-group .controls
+    {
+        padding-right: 20px;
+    }
+    .control-group .controls .chzn-container {
+ -webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+width: 100% !important;
+    height: 35px;
+        margin-right:25px
+}
+
+</style>
+}

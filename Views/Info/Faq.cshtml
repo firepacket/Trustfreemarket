@@ -1,0 +1,312 @@
+﻿
+@section Scripts {
+
+}
+@section Head {
+
+}
+
+<div class="faq">
+    <h2 class="page-header">Frequently asked questions</h2>
+    <div class="content">
+        <div class="row">
+            <div class="span6">
+                <h2>Listing items</h2>
+
+                <div class="accordion" id="faq1">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#faq1" href="#collapse1">
+                                <span class="sign"></span> How long are listings active?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse1" class="accordion-body collapse" style="height: 0px; ">
+                            <div class="accordion-inner">
+                                Listings are active for @AnarkRE.Globals.ListingDays days by default.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq1" href="#collapse2">
+                                <span class="sign"></span> How are listings priced?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse2" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                The price of a listing can be pegged to the currency of your choice. Prices are determined using the Bitpay data feed.</div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq1" href="#collapseC">
+                                <span class="sign"></span> What are product variations?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapseC" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                If you would like your buyer to specify some selection such as color or size, you can add a product variation.<br /><br />
+                                This option can be found on a listing page you created under the "Add More" tab.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq1" href="#collapseD">
+                                <span class="sign"></span> Can I offer different shipping options?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapseD" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Yes. After creating a listing, select the "Add More" tab and you can add up to @AnarkRE.Globals.ListAddOpts[AnarkRE.ListingAdditionType.Shipping] different shipping options.
+                                <br /><br />
+                                The customer must select one of the shipping methods you input and the cost will be added to the total.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                </div><!-- /.accordion -->
+
+                <h2>My Account</h2>
+
+                <div class="accordion" id="faq3">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq3" href="#collapse9">
+                                <span class="sign"></span> How do I create a seller account?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse9" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Currently, all accounts can buy and sell. We will be evaluating this and may restrict account functionality if needed.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq3" href="#collapse10">
+                                <span class="sign"></span> How can I reset my account password?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse10" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Password reset coming soon, till then <a href="mailto:support@anark.it">email us</a></div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq3" href="#collapseB">
+                                <span class="sign"></span> How does feedback work?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapseB" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Both buyers and sellers are required to leave feedback when they are finished with a transaction. This is used to calculate the score and color seen by each username.<br /><br />
+
+                                There are two kinds of feedback, buyer feedback and seller feedback. Sellers get to see buyer feedback before accepting the transaction, and buyers get to see the seller's score and feedback on the listing page.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                </div><!-- /.accordion -->
+            </div><!-- /.span6 -->
+
+            <div class="span6">
+                <h2>Escrow usage</h2>
+
+                <div class="accordion" id="faq2">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapse6">
+                                <span class="sign"></span> What happens if I lose my escrow password?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse6" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Your escrow password cannot be recovered. If you lose it, you will have to close the transaction and release the funds to the other side. If both parties lose their passwords, any funds held in escrow will be lost.
+
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapse5">
+                                <span class="sign"></span> What if something happens to your website, how can I get my coins?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse5" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                When viewing an open transaction, both parties can save the webpage and all javascript code to disk by using (File -> Save in most browsers).<br /><br /> This saved webpage can then be used (even offline!) to assemble the multipart keys. You can also save the raw keys under the "Advanced" tab and use them with other open source implementations like <a href="http://www.bitescrow.org">bitescrow.org</a> or the <a href="https://github.com/casascius/Bitcoin-Address-Utility">Bitcoin Address Utility</a> <br /><br />As long as you save each transaction page to your harddrive, you will still be able to complete your transaction even if our site goes down.</div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapse8">
+                                <span class="sign"></span> Is your website really an escrow?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse8" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Not in traditional sense, since we do not hold users' funds. A
+better way to understand it is the bitcoins are held in the blockchain
+locked up in three private keys. 
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapse7">
+                                <span class="sign"></span> How do I withdraw coins from escrow?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse7" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                The same way you would spend from a paper wallet.
+                                <br /><br />
+                                Collecting funds from escrow requires importing the Bitcoin Private Key which will be presented to you in Wallet Import Format (long string starting with a 5).<br /><br /> All of the following clients support importing private keys, please see their websites for instructions: Coinbase, Electrum,
+MulitBit, Blockchain.info, Armory, Bitcoin Qt, Mycelium, and more.
+
+
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapseA">
+                                <span class="sign"></span> I have a dispute, how does arbitration work?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapseA" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Email us at <a href="mailto:support@anark.it">support@anark.it</a> and tell us what happened. Include as much detail as possible along with 
+a copy of all communication (email with headers is preferred). We will then contact the other party for their response.<br /><br />
+                                
+                                After considering both sides, we will send the key to the
+prevailing party, allowing them to unlock the bitcoins with their transaction password.</div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+                    
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq2" href="#collapseE">
+                                <span class="sign"></span> What is the "Session Code" and do I have to use it?
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapseE" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                 The session code is actually an MD5 hash of the buyer's public key. By sending it to the seller via email, you are ensuring that we cannot swap your key for our key (man in the middle attack) and decrypt your session.
+                                <br /><br />
+                                The seller can check the emailed code matches the code shown in his web browser and feel confident that only the buyer can read his multi-part key.
+                                <br /><br />
+                                Even if you ignore it, your coins are still safe. But if you want 100% security, we recommend verifying the session code through email with the other party.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+                    
+
+                </div><!-- /.accordion -->
+
+@*                <h2>Cryptography</h2>
+
+                <div class="accordion" id="faq4">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq4" href="#collapse14">
+                                <span class="sign"></span> Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse14" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis tincidunt elit. Donec ut ligula vel ante eleifend dapibus nec at libero. Aliquam a diam eu risus porttitor placerat. Praesent volutpat sem sed nibh dapibus adipiscing. Aenean congue porta mauris eget interdum. Nunc pharetra tempor ante vel fringilla. In aliquet fringilla dolor, eget auctor ipsum pellentesque sed. Morbi elit erat, laoreet at tincidunt quis, feugiat a libero. Nam vitae lacus eget augue ultrices placerat vel eget neque. Phasellus volutpat tincidunt dapibus. Integer adipiscing lectus vel mi porta eget pharetra elit iaculis. Vestibulum a augue quis nulla pharetra lacinia ut vel ante. Mauris tristique tellus id nibh tincidunt lobortis.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq4" href="#collapse15">
+                                <span class="sign"></span> Sed dignissim tortor dignissim eros consequat tincidunt
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse15" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis tincidunt elit. Donec ut ligula vel ante eleifend dapibus nec at libero. Aliquam a diam eu risus porttitor placerat. Praesent volutpat sem sed nibh dapibus adipiscing. Aenean congue porta mauris eget interdum. Nunc pharetra tempor ante vel fringilla. In aliquet fringilla dolor, eget auctor ipsum pellentesque sed. Morbi elit erat, laoreet at tincidunt quis, feugiat a libero. Nam vitae lacus eget augue ultrices placerat vel eget neque. Phasellus volutpat tincidunt dapibus. Integer adipiscing lectus vel mi porta eget pharetra elit iaculis. Vestibulum a augue quis nulla pharetra lacinia ut vel ante. Mauris tristique tellus id nibh tincidunt lobortis.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq4" href="#collapse16">
+                                <span class="sign"></span> Pellentesque habitant morbi tristique senectus et netus
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse16" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis tincidunt elit. Donec ut ligula vel ante eleifend dapibus nec at libero. Aliquam a diam eu risus porttitor placerat. Praesent volutpat sem sed nibh dapibus adipiscing. Aenean congue porta mauris eget interdum. Nunc pharetra tempor ante vel fringilla. In aliquet fringilla dolor, eget auctor ipsum pellentesque sed. Morbi elit erat, laoreet at tincidunt quis, feugiat a libero. Nam vitae lacus eget augue ultrices placerat vel eget neque. Phasellus volutpat tincidunt dapibus. Integer adipiscing lectus vel mi porta eget pharetra elit iaculis. Vestibulum a augue quis nulla pharetra lacinia ut vel ante. Mauris tristique tellus id nibh tincidunt lobortis.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq4" href="#collapse17">
+                                <span class="sign"></span> Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse17" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis tincidunt elit. Donec ut ligula vel ante eleifend dapibus nec at libero. Aliquam a diam eu risus porttitor placerat. Praesent volutpat sem sed nibh dapibus adipiscing. Aenean congue porta mauris eget interdum. Nunc pharetra tempor ante vel fringilla. In aliquet fringilla dolor, eget auctor ipsum pellentesque sed. Morbi elit erat, laoreet at tincidunt quis, feugiat a libero. Nam vitae lacus eget augue ultrices placerat vel eget neque. Phasellus volutpat tincidunt dapibus. Integer adipiscing lectus vel mi porta eget pharetra elit iaculis. Vestibulum a augue quis nulla pharetra lacinia ut vel ante. Mauris tristique tellus id nibh tincidunt lobortis.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq4" href="#collapse18">
+                                <span class="sign"></span> Praesent luctus pulvinar pretium. In lectus risus
+                            </a>
+                        </div><!-- /.accordion-heading -->
+
+                        <div id="collapse18" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis tincidunt elit. Donec ut ligula vel ante eleifend dapibus nec at libero. Aliquam a diam eu risus porttitor placerat. Praesent volutpat sem sed nibh dapibus adipiscing. Aenean congue porta mauris eget interdum. Nunc pharetra tempor ante vel fringilla. In aliquet fringilla dolor, eget auctor ipsum pellentesque sed. Morbi elit erat, laoreet at tincidunt quis, feugiat a libero. Nam vitae lacus eget augue ultrices placerat vel eget neque. Phasellus volutpat tincidunt dapibus. Integer adipiscing lectus vel mi porta eget pharetra elit iaculis. Vestibulum a augue quis nulla pharetra lacinia ut vel ante. Mauris tristique tellus id nibh tincidunt lobortis.
+                            </div><!-- /.accordion-inner -->
+                        </div><!-- /.accordion-body -->
+                    </div><!-- /.accordion-group -->
+                </div><!-- /.accordion -->*@
+
+
+
+            </div><!-- /.span6 -->
+        </div><!-- /.row -->
+    </div><!-- /.content -->
+</div>

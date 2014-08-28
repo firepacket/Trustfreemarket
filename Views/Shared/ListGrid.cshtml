@@ -1,0 +1,71 @@
+﻿@model IEnumerable<AnarkRE.Models.ListingGridItem>
+@using AnarkRE;
+@using AnarkRE.Models;
+@using GridMvc.Html;
+
+@{
+    //var grid = new WebGrid(Model,
+    //    canPage: true,
+    //    rowsPerPage: 20,
+    //    selectionFieldName:  "selectedRow",
+    //    ajaxUpdateContainerId: "gridContent");
+   
+    //    grid.Pager(WebGridPagerModes.NextPrevious);
+        
+}
+<div class="row">
+<div class="span12">
+<div id="gridContent">
+
+    @Html.Grid(Model).Columns(c =>
+    {
+        c.Add(s => s.ListId).Titled("").Sanitized(false).Encoded(false).RenderValueAs<ListingGridItem>(s => GridPicture(s.ListId));
+        c.Add(s => s.Title).Filterable(true).Sortable(true).Sanitized(false).Encoded(false).RenderValueAs(s => Html.ActionLink(s.Title, "view", "listings", new { id = s.ListId.StringWithoutDashes() }, new { style = "color:#2a5a3e;" }).ToHtmlString());
+        if (Model.Any(s => s.IsBrowse))
+        {
+            c.Add(s => s.Username).Titled("User").Filterable(true).Sortable(true);
+            c.Add(s => s.Score).Sanitized(false).Encoded(false).Filterable(true).Sortable(true).RenderValueAs<ListingGridItem>(s => Score(s.Score));
+        }
+        c.Add(s => s.PriceBtc).Titled("BTC").Filterable(true).RenderValueAs(item => Math.Round(item.PriceBtc, 4).FormatNumber() + " BTC").Sortable(true);
+        c.Add(s => s.PriceUsd).Titled("USD").Filterable(true).RenderValueAs(item => String.Format("{0:C}", item.PriceUsd)).Sortable(true);
+        c.Add(s => s.Category).Titled("Catagory").Filterable(true).Sortable(true);
+        c.Add(s => s.CreateDt).Titled("Created").Sortable(true).Filterable(true).RenderValueAs(item => (DateTime.Now - item.CreateDt).ToString((DateTime.Now - item.CreateDt).TotalHours < 24 ? "%h" : "%d") + ((DateTime.Now - item.CreateDt).TotalHours < 24 ? " hours" : " days") + " ago");
+        //c.Add(s => s.ExpireDt).Titled("Expires").Sortable(true)
+        //    .RenderValueAs(item => (item.CreateDt.AddDays(Globals.ListingDays) - DateTime.Now).ToString((item.CreateDt.AddDays(Globals.ListingDays) - DateTime.Now).TotalHours < 24 ? "%h" : "%d") + ((item.CreateDt.AddDays(Globals.ListingDays) - DateTime.Now).TotalHours < 24 ? " hours" : " days"));
+    
+    }).WithPaging(10)
+
+@*        @grid.GetHtml(tableStyle: "webGrid",
+                headerStyle: "header",
+                //alternatingRowStyle: "alt",
+                selectedRowStyle: "select",
+               
+                columns: grid.Columns(
+                //grid.Column("ListingId", format: (item) => item.GetSelectLink(item.ListingId.ToString())),
+                grid.Column("ListingId", "Picture", format: (item) => Html.Raw(@"<div style=""text-align:center"">
+                                    <a href=""" + @Url.Action("view", "listings", new { id = item.ListingId.ToString().Replace("-", "") }) + @""">
+                                    <img src=""" + @Url.Action("images", "listings", new { id = item.ListingId + "_s" }) + @""" alt=""""></a></div>")),
+                grid.Column("CreateDate", "Created", format: (item) => item.CreateDate.ToShortDateString() + " " + item.CreateDate.ToShortTimeString()),
+                
+                grid.Column("Title", " Title"),
+                grid.Column("PriceBtc", "PriceBtc", format: (item) => Math.Round(item.PriceBtc, 4) + " BTC"),
+                grid.Column("PriceUsd", "PriceUsd", format: (item) => String.Format("{0:C}", item.PriceUsd))
+
+         )
+         
+         )*@
+</div>
+</div>
+</div>
+
+@helper GridPicture(Guid id)
+    {
+        <div>
+         <a href="@Url.Action("view", "listings", new { id = id.StringWithoutDashes() })">
+        <img src="@Url.Action("images", "listings", new { id = id.StringWithoutDashes() + "_0_s" })" alt=""></a></div>
+    }
+
+@helper Score(decimal? s)
+{
+    <span style="color:@Globals.ScoreColor(s)">@(s == null ? "none" : s.Value.RoundTo(2).ToString())</span>
+}

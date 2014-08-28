@@ -1,0 +1,27 @@
+﻿@model bool
+
+
+<div class="span3"></div>
+<div class="span6">
+    <br /><br />
+@if (Model)
+{
+   <div class="alert alert-success">
+       <h2 class="page-header">Verification Success!</h2>
+       <p class="lead">Your account has been verified. You may now log in.</p>
+       <br />
+       <a href="@Url.Action("login")" class="btn btn-primary">Log in</a>
+   </div>
+}
+else
+{
+    <div class="alert alert-error">
+       <h2 class="page-header">Registration failed.</h2>
+       <p class="lead">Contact support and we will try and figure out what happened.</p>
+
+   </div>
+}
+</div>
+
+
+  

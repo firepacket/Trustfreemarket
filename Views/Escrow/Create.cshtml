@@ -1,0 +1,209 @@
+﻿@model AnarkRE.Models.EscrowCreateView
+@using AnarkRE;
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/crypto")
+    <script type="text/javascript">
+        $('#startTrans').click(function () {
+            if ($('#startTrans').hasClass("disabled"))
+                return false;
+            if ($("#tspwd").val().length < 6) {
+                alert("Please enter a password greater than 6 digits");
+                return false;
+            }
+
+            $('#startTrans').addClass("disabled");
+            $('#startTrans').removeClass("btn-primary");
+            $('#startTrans').removeClass("btn-default");
+            var keySize = 2048;
+            crypt = new JSEncrypt({ default_key_size: keySize });
+
+            var dt = new Date();
+            var time = -(dt.getTime());
+
+            $('#progress-summary').text('Generating 2048 bit RSA key (please be patient).');
+            var load = setInterval(function () {
+                var text = $('#progress-summary').text();
+                $('#progress-summary').text(text + '.');
+            }, 250);
+
+
+            crypt.getKey(function () {
+                clearInterval(load);
+                dt = new Date();
+                time += (dt.getTime());
+                $('#progress-summary').text($('#progress-summary').text() + ' Generated in ' + time + ' ms');
+                $('#privkey').text(crypt.getPrivateKey());
+                $('#pubkey').text(crypt.getPublicKey());
+
+
+                triplesec.encrypt({
+
+                    data: new triplesec.Buffer($('#privkey').text()),
+                    key: new triplesec.Buffer($("#tspwd").val()),
+                    progress_hook: progress_hook
+
+                }, function (err, buff) {
+
+                    if (!err) {
+                        $("#encpriv").text(buff.toString('hex'));
+
+                        var data = {
+                            'PubKey': $('#pubkey').text(),
+                            'EncPrivKey': $("#encpriv").text(),
+                            'ShippingId': '@(Model.Item.Options.ShippingId.HasValue 
+                                ? Model.Item.Options.ShippingId.Value.ToString()
+                                : "")',
+                            'VariationId' : '@(Model.Item.Options.VariationId.HasValue
+                                ? Model.Item.Options.VariationId.Value.ToString()
+                                : "")'
+                        }
+                        
+
+                        $token = $('input[name=""__RequestVerificationToken""]').val();
+                        $.ajax({
+                            type: 'PUT',
+                            url: '/api/escrow/@Model.Id',
+                        data: data,
+                        dataType: 'JSON',
+                        headers: { RequestVerificationToken: $token },
+                        //headers: { __RequestVerificationToken: $token },
+                        success: function (result) {
+                            $("#passWindow").hide(500);
+                            $("#donewindow").show(500);
+                            $("#progress-summary").hide();
+                            var hsh = md5($('#pubkey').text());
+                            $("#keyhash").text(hsh);
+                            $("#emailLnk").attr('href', 'mailto:' + result + '?subject=Purchase%20Session%20Code%20' + hsh);
+                        },
+                        complete: function () {
+                        },
+                        error: function (jqXhr) {
+                            //extractErrors(jqXhr, validator);
+                            alert(JSON.stringify(jqXhr));
+                        }
+                    });
+                    }
+                    else { alert(JSON.stringify(err)); }
+
+            });
+            });
+            
+
+
+            //crypt.getKey();
+            //dt = new Date();
+            //time += (dt.getTime());
+            ////$('#time-report').text('Generated in ' + time + ' ms');
+            //$('#privkey').text(crypt.getPrivateKey());
+            //$('#pubkey').text(crypt.getPublicKey());
+
+
+
+            
+        });
+    </script>
+}
+<span>@Html.AntiForgeryToken()</span>
+<div class="row">
+
+    <div class="span8">
+        <div style="padding-left:45px">
+            <h1 class="page-header">Request Purchase of Item</h1>
+            If the seller accepts your request, a secure escrow bitcoin address will be created for payment.
+            <ul class="tabs nav nav-tabs">
+                <li class="active"><a href="#home">Main</a></li>
+                <li class=""><a href="#advanced">Advanced Variables</a></li>
+
+            </ul>
+
+            <div class="tab-content">
+
+                <div class="tab-pane active" id="home">
+
+                    <div id="passWindow">
+                    <p class="lead">Create a password to protect your transaction</p>
+
+                    <p style="padding-left: 25px;">
+                        @*<button type="button" class="close" data-dismiss="alert">×</button>*@
+                        <strong>Do not lose your password!</strong> If you forget your password, you will lose access to funds in escrow!
+                    </p><br />
+
+                    <b>Password:</b> <input class="input-xlarge search-query" style="" type="text" id="tspwd" value="">
+                    <button class="btn btn-primary" id="startTrans">Request Purchase</button><br />
+                    <br />
+                    <div id="progress-summary" style="padding: 10px;"></div>
+                    </div>
+
+                    <div id="donewindow" style="display: none">
+
+                        <div class="alert alert-success" style="padding-left: 25px">
+                            <h4>Transaction request sent!</h4>
+                            Make sure you contact the seller with details regarding your order.<br />
+                        </div>
+                        <div class="well"><u>Session code:</u> <span id="keyhash"></span></div>
+                        <div>
+
+                            To send your session code to the seller, click on <b>Notify Seller</b> below. If your item is being shipped, don't forget to include your address.
+
+                        </div>
+                        
+                        <br />
+                        <br />
+                        <a class="btn btn-info pull-left" id="emailLnk">Notify Seller</a> &nbsp; @Html.ActionLink("Continue", "index", new { }, new { @class = "btn btn-primary pull-right arrow-right" })
+                    </div>
+                    
+                </div>
+
+                <div class="tab-pane" id="advanced">
+                    <span class="lead">These are the values that are being generated in your browser.<br /></span>
+                    
+                    <small>Only the encrypted private key and public key are sent back to the server</small><br /><br />
+                    
+                    Unencrypted Private Key<br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block" id="privkey"></pre>
+                    <br />
+                    Public Key<br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block; vertical-align: top" id="pubkey"></pre>
+                    <br />
+                    <strong>Encrypted Private Key</strong><br />
+                    <pre class="prettyprint" style="width: 500px; display: inline-block; vertical-align: top" id="encpriv"></pre>
+                </div>
+
+
+            </div>
+
+        </div>
+        
+
+    </div>
+
+
+    <div class="span3 sidebar">
+        <div class="widget our-agents">
+            <div class="title">
+                <h2>Seller</h2>
+            </div>
+            @Html.Partial("FeedbackBadge", Model.FeedBadge)
+        </div>
+        <div class="widget">
+            <div class="title">
+                <h2>Item</h2>
+            </div>
+            @Html.Partial("ItemCompact", Model.Item)
+        </div>
+@*
+        <div class="property-filter" style="margin-top:25px">
+                        <div class="content">
+                            <form method="get" action="?">
+                                <div class="form-actions">
+                                    <input type="submit" value="Filter now!" class="btn btn-primary btn-large">
+                                </div><!-- /.form-actions -->
+                            </form>
+                        </div><!-- /.content -->
+                    </div>*@
+    </div>
+
+
+    
+</div>

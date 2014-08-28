@@ -1,0 +1,19 @@
+﻿@model IEnumerable<AnarkRE.Models.ListingGridItem>
+
+
+
+@section Head
+{
+    @Styles.Render("~/Content/grid/css")
+
+}
+@section Scripts {
+    <script type="text/javascript" src="~/Scripts/gridmvc.min.js"></script>
+}
+
+<h1 class="page-header">My Listings</h1>
+<p class="lead">You have @Model.Count() listings</p>
+
+@{
+    Html.RenderPartial("ListGrid", Model);
+}
