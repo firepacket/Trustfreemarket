@@ -1,7 +1,7 @@
 trustfreemarket.com (formally known as Anark)
 ========
 
-Web-based secure 3-party escrow platform
+Webbased secure 3-party escrow platform
 
 Uses multipart keys to allow a buyer and seller to complete a bitcoin transaction with a mediator (the site)
 while preventing any party from having the keys needed to spend the coins from escrow. 
@@ -24,4 +24,4 @@ STEPS TO SET UP
 2. Update SendEmail() in Globals.cs in the root folder with your SMTP credentials
 3. Build and run. You may login with admin/admin
 
-Questions or comments may be sent to admin@firepacket.net
+Questions or comments may be sent to admin@trustfreemarket.com
