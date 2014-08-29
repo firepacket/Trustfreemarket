@@ -1,7 +1,7 @@
 trustfreemarket.com (formally known as Anark)
 ========
 
-Trustfree bitcoin marketplace
+Web-based secure 3-party escrow platform
 
 Uses multipart keys to allow a buyer and seller to complete a bitcoin transaction with a mediator (the site)
 while preventing any party from having the keys needed to spend the coins from escrow. 
