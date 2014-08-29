@@ -1,4 +1,4 @@
-anark.it
+trustfreemarket.com (formally known as Anark)
 ========
 
 Trustfree bitcoin marketplace
