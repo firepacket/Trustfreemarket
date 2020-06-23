@@ -1,4 +1,4 @@
-trustfree.market (formally known as Anark)
+https://trustfree.market (formally known as Anark)
 ========
 
 Webbased secure 3-party escrow platform
