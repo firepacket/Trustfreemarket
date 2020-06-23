@@ -1,4 +1,4 @@
-trustfreemarket.com (formally known as Anark)
+trustfree.market (formally known as Anark)
 ========
 
 Webbased secure 3-party escrow platform
@@ -24,4 +24,4 @@ STEPS TO SET UP
 2. Update SendEmail() in Globals.cs in the root folder with your SMTP credentials
 3. Build and run. You may login with admin/admin
 
-Questions or comments may be sent to admin@trustfreemarket.com
+Questions or comments may be sent to admin@trustfree.market
