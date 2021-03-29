@@ -9,6 +9,7 @@ namespace AnarkRE.Controllers
 {
     public class HomeController : BaseController
     {
+        [InitializeSimpleMembershipAttribute] // REMOVE THIS AFTER RUNNING FIRST TIME!!
         public ActionResult Index()
         {
             var features = data.Listings.Get(s => s.FeaturedDate.HasValue 
