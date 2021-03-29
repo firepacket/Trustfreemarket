@@ -23,6 +23,7 @@ STEPS TO SET UP
 2. Generate the database from /Models/SiteDB.edmx
 2. Update SendEmail() in Globals.cs in the root folder with your SMTP credentials
 3. Build and run. You may login with admin/admin
+4. You have to add your own Categories in the Categories table. It doesn't happen automatically
 
 Questions or comments may be sent to admin@trustfree.market
 
