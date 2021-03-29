@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Grid.Mvc.DatePicker</id>
+    <version>1.0.0</version>
+    <title>Grid.Mvc DatePicker</title>
+    <authors>Vyacheslav Bukharin</authors>
+    <owners>Vyacheslav Bukharin</owners>
+    <licenseUrl>https://github.com/bukharin/bootstrap-datepicker/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/bukharin/bootstrap-datepicker</projectUrl>
+    <iconUrl>http://www.codeplex.com/Download?ProjectName=gridmvc&amp;DownloadId=386651</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package provides additional functionality to implement datepicker for filtering date columns in Grid.Mvc.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>datepicker javascript css control plugin</tags>
+  </metadata>
+</package>

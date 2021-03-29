@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Grid.Mvc</id>
+    <version>3.0.0</version>
+    <title>Grid.Mvc</title>
+    <authors>Vyacheslav Bukharin</authors>
+    <owners>Vyacheslav Bukharin</owners>
+    <licenseUrl>http://gridmvc.codeplex.com/license</licenseUrl>
+    <projectUrl>http://gridmvc.codeplex.com/</projectUrl>
+    <iconUrl>http://www.codeplex.com/Download?ProjectName=gridmvc&amp;DownloadId=386651</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package provides functionality to build GridView based on your model items collection. Grid.Mvc support sorting, filtering and paging your data.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>ASP.NET MVC Control GridView Grid Generic</tags>
+  </metadata>
+</package>

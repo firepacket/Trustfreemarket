@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Grid.Mvc.Ajax</id>
+    <version>1.0.15</version>
+    <title>Grid.Mvc.Ajax</title>
+    <authors>Eric Vogel, Michael Eaton</authors>
+    <owners>Eric Vogel, Michael Eaton</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Extends the Grid.Mvc helper with AJAX paging, sorting, and column and form filtering.</description>
+    <summary>Extends the Grid.Mvc helper with AJAX paging, sorting, and column and form filtering.</summary>
+    <releaseNotes>Added support for multiple grids and partial view grids with Ajax functionality.</releaseNotes>
+    <copyright />
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Grid.Mvc" version="3.0.0" />
+    </dependencies>
+  </metadata>
+</package>

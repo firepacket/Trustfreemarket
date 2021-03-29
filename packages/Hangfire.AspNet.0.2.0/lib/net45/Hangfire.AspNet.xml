@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hangfire.AspNet</name>
+    </assembly>
+    <members>
+        <member name="T:Hangfire.AuthorizationFilter">
+            <summary>
+            Represents a basic <i>authorization filter</i> that allows to restrict the 
+            access to Dashboard UI only to authenticated users, as well as restrict the
+            access only to specified users or roles.
+            </summary>
+        </member>
+        <member name="M:Hangfire.AuthorizationFilter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hangfire.AuthorizationFilter"/> class.
+            By default, it enables <i>all authenticated users</i> to access the Dashboard 
+            UI, please use <see cref="P:Hangfire.AuthorizationFilter.Users"/> and <see cref="P:Hangfire.AuthorizationFilter.Roles"/> properties to 
+            configure this behavior.
+            </summary>
+        </member>
+        <member name="P:Hangfire.AuthorizationFilter.Roles">
+            <summary>
+            Gets or sets the roles that are authorized to access the Dashboard UI.
+            Multiple values are allowed by separating them with commas: "Staff,Admin",
+            set it to <see langword="null"/> to remove the roles restriction.
+            </summary>
+        </member>
+        <member name="P:Hangfire.AuthorizationFilter.Users">
+            <summary>
+            Gets or sets the users that are authorized to access the Dashboard UI.
+            Multiple values are allowed by separating them with commas: "Alice,Bob",
+            set it to <see langword="null"/> to remove the users restriction.
+            </summary>
+        </member>
+        <member name="M:Hangfire.AuthorizationFilter.Authorize(Hangfire.Dashboard.DashboardContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Hangfire.ClaimsAuthorizationFilter">
+            <summary>
+            Represents a generic <i>authorization filter</i> that allows to restrict 
+            the access to Dashboard UI only for users who has the claim of the specified
+            type with the given value.
+            </summary>
+        </member>
+        <member name="M:Hangfire.ClaimsAuthorizationFilter.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hangfire.ClaimsAuthorizationFilter"/> class
+            with the given claim type and value.
+            </summary>
+            <param name="type">The type of a claim that should be available to a user.</param>
+            <param name="value">The value of a claim that should be set for a user.</param>
+        </member>
+        <member name="M:Hangfire.ClaimsAuthorizationFilter.Authorize(Hangfire.Dashboard.DashboardContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Hangfire.HangfireAspNet">
+            <summary>
+            Provides thread-safe idempotent methods for running <see cref="T:Hangfire.BackgroundJobServer"/>
+            and <see cref="T:Hangfire.Server.BackgroundProcessingServer"/> instances in ASP.NET application with
+            automatic disposal on AppDomain shutdown, without waiting for pending HTTP requests
+            to complete.
+            </summary>
+            <remarks>
+            Methods of this class use <see cref="P:Hangfire.HangfireAspNet.AppDomainShutdownToken"/> to get notified, when
+            ASP.NET application's app domain is going to shutdown. It uses extended checks to
+            get this notifications, comparing to the <see cref="T:System.Web.Hosting.IRegisteredObject"/> interface,
+            please see the source code for details.
+            </remarks>
+        </member>
+        <member name="P:Hangfire.HangfireAspNet.AppDomainShutdownToken">
+            <summary>
+            Gets an instance of the <see cref="T:System.Threading.CancellationToken"/> class that is canceled, 
+            when ASP.NET application is going to shutdown, without wait for pending HTTP 
+            requests to complete, as opposed to the <see cref="T:System.Web.Hosting.IRegisteredObject"/> interface 
+            implementations.
+            </summary>
+        </member>
+        <member name="M:Hangfire.HangfireAspNet.Use(System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})">
+            <summary>
+            Calls the given <paramref name="configuration"/> delegate, and registers all the
+            returned instances to be disposed, when ASP.NET application's app domain is going 
+            to shutdown, using the <see cref="P:Hangfire.HangfireAspNet.AppDomainShutdownToken"/> property.
+            </summary>
+            <remarks>
+            <para>This method is designed to run in implementations of the <see cref="T:System.Web.Hosting.IProcessHostPreloadClient"/>
+            interface, in Global.asax class, or anywhere else, where OWIN's <see cref="T:Owin.IAppBuilder"/>
+            interface is not accessible.</para>
+            <para>This method is thread-safe and idempotent, the <paramref name="configuration"/>
+            delegate is called <b>only once</b>, regardless of the number of <see cref="M:Hangfire.HangfireAspNet.Use(System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/>
+            or <see cref="M:Hangfire.HangfireAspNet.UseHangfireAspNet(Owin.IAppBuilder,System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/> method calls.</para> 
+            </remarks>
+            <seealso cref="M:Hangfire.HangfireAspNet.UseHangfireAspNet(Owin.IAppBuilder,System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/>
+        </member>
+        <member name="M:Hangfire.HangfireAspNet.UseHangfireAspNet(Owin.IAppBuilder,System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})">
+            <summary>
+            Calls the given <paramref name="configuration"/> delegate, and registers all the
+            returned instances to be disposed, when ASP.NET application's app domain is going 
+            to shutdown,  using the <see cref="P:Hangfire.HangfireAspNet.AppDomainShutdownToken"/> property.
+            </summary>
+            <remarks>
+            <para>This method is designed to run in OWIN's Startup class, using the <see cref="T:Owin.IAppBuilder"/> 
+            interface. Use the <see cref="M:Hangfire.HangfireAspNet.Use(System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/> method for non-OWIN setups.</para>
+            <para>This method is thread-safe and idempotent, the <paramref name="configuration"/>
+            delegate called <b>only once</b>, regardless of the number of <see cref="M:Hangfire.HangfireAspNet.Use(System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/>
+            or <see cref="M:Hangfire.HangfireAspNet.UseHangfireAspNet(Owin.IAppBuilder,System.Func{System.Collections.Generic.IEnumerable{System.IDisposable}})"/> method calls.</para>
+            </remarks>
+        </member>
+    </members>
+</doc>
