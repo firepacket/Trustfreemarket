@@ -40,4 +40,6 @@ Userprofiles and a focus on the feedback system are top priorities.
 
 We also plan on allowing you to spend your coins directly from escrow on the site without having to sweep the key like a paperwallet (if you choose to pay the miner fee).
 
+## We have now cryptographically signed all CSS, HTML, and Javascript, sent from the server using RSA/SHA512 public/private key signatures, and we have a cross-browser userscript client-side plugin that can validate all the code you are running is authentic. It will notify you if the check fails and where it failed. This was the #1 request for this application and it's working in beta right now! This comes as an additional protection to SSL.
+
 Keep checking back to see how we've implemented these features and let us know of any concerns!
