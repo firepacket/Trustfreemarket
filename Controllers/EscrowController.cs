@@ -56,9 +56,9 @@ namespace AnarkRE.Controllers
                     FeedBadge = WebSecurity.CurrentUserId == escrow.BuyerId ?
                     new FeedbackBadgeModel()
                     {
-                        Sales = list.UserProfile.FeedbacksAbout.Count,
-                        Username = list.UserProfile.UserName,
-                        Score = list.UserProfile.SellerScore
+                        Sales = list.User.FeedbacksAbout.Count,
+                        Username = list.User.UserName,
+                        Score = list.User.SellerScore
                     }
                     :
                     new FeedbackBadgeModel()
@@ -149,9 +149,9 @@ namespace AnarkRE.Controllers
                         PriceCUR = list.PriceCUR,
                         PriceUSD = list.GetPriceUsd(),
                         Title = list.Title,
-                        SellerUser = list.UserProfile.UserName,
-                        SellerScore = (list.UserProfile.FeedbacksAbout.Count > 0 ?
-                            list.UserProfile.FeedbacksAbout.Select(s => (decimal)s.Stars).Average() :
+                        SellerUser = list.User.UserName,
+                        SellerScore = (list.User.FeedbacksAbout.Count > 0 ?
+                            list.User.FeedbacksAbout.Select(s => (decimal)s.Stars).Average() :
                             new Nullable<decimal>()),
                        
                     };
@@ -175,7 +175,7 @@ namespace AnarkRE.Controllers
                     .Any(s => s.BuyerId == WebSecurity.CurrentUserId))
                     return RedirectToAction("Index"); // user already has active escrow
 
-                if (list.UserProfile.UserId == WebSecurity.CurrentUserId) // cant buy own item
+                if (list.User.UserId == WebSecurity.CurrentUserId) // cant buy own item
                     return RedirectToAction("view", "listings", new { id = id });
 
                 if (list.ListingAdditions.Any(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.Shipping)
@@ -202,9 +202,9 @@ namespace AnarkRE.Controllers
                     Item = ListingToItem(list),
                     FeedBadge = new FeedbackBadgeModel()
                     {
-                        Sales = list.UserProfile.FeedbacksAbout.Count,
-                        Username = list.UserProfile.UserName,
-                        Score = list.UserProfile.SellerScore
+                        Sales = list.User.FeedbacksAbout.Count,
+                        Username = list.User.UserName,
+                        Score = list.User.SellerScore
                     }
                 };
 

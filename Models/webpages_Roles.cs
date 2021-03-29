@@ -12,13 +12,16 @@ namespace AnarkRE.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PasswordReset
+    public partial class webpages_Roles
     {
-        public System.Guid PWResetId { get; set; }
-        public System.DateTime RequestedDt { get; set; }
-        public Nullable<System.DateTime> UsedDt { get; set; }
-        public Nullable<int> UserId { get; set; }
+        public webpages_Roles()
+        {
+            this.Users = new HashSet<User>();
+        }
     
-        public virtual User User { get; set; }
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
+    
+        public virtual ICollection<User> Users { get; set; }
     }
 }

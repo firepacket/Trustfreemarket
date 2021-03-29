@@ -16,9 +16,9 @@ namespace AnarkRE.Models
     {
         public Listing()
         {
+            this.ContactMsgs = new HashSet<ContactMsg>();
             this.Escrows = new HashSet<Escrow>();
             this.Feedbacks = new HashSet<Feedback>();
-            this.ContactMsgs = new HashSet<ContactMsg>();
             this.ListingAdditions = new HashSet<ListingAddition>();
         }
     
@@ -41,10 +41,10 @@ namespace AnarkRE.Models
         public Nullable<int> QtySold { get; set; }
     
         public virtual Catagory Catagory { get; set; }
-        public virtual ICollection<Escrow> Escrows { get; set; }
-        public virtual User UserProfile { get; set; }
-        public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<ContactMsg> ContactMsgs { get; set; }
+        public virtual ICollection<Escrow> Escrows { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<ListingAddition> ListingAdditions { get; set; }
+        public virtual User User { get; set; }
     }
 }

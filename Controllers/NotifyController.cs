@@ -23,7 +23,7 @@ namespace AnarkRE.Controllers
             {
             
                 EscrowAccept escrowaccept = data.EscrowAccepts.GetByID(id);
-                Escrow escrow = escrowaccept.Escrow.FirstOrDefault();
+                Escrow escrow = escrowaccept.Escrows.FirstOrDefault();
                 if (escrow != null && escrowaccept.EscrowAddress == addr && escrow != null)
                 {
                     escrowaccept.LastAddressBalance = escrowaccept.LastAddressBalance.HasValue

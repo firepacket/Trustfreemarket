@@ -16,7 +16,7 @@ namespace AnarkRE.Models
     {
         public EscrowAccept()
         {
-            this.Escrow = new HashSet<Escrow>();
+            this.Escrows = new HashSet<Escrow>();
         }
     
         public int AcceptId { get; set; }
@@ -29,6 +29,6 @@ namespace AnarkRE.Models
         public System.DateTime AutoReleaseDt { get; set; }
         public Nullable<decimal> LastAddressBalance { get; set; }
     
-        public virtual ICollection<Escrow> Escrow { get; set; }
+        public virtual ICollection<Escrow> Escrows { get; set; }
     }
 }

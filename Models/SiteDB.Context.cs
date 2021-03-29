@@ -26,14 +26,15 @@ namespace AnarkRE.Models
         }
     
         public DbSet<Catagory> Catagories { get; set; }
+        public DbSet<ContactMsg> ContactMsgs { get; set; }
         public DbSet<EscrowAccept> EscrowAccepts { get; set; }
         public DbSet<Escrow> Escrows { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<ListingAddition> ListingAdditions { get; set; }
         public DbSet<Listing> Listings { get; set; }
+        public DbSet<PasswordReset> PasswordResets { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<webpages_Membership> webpages_Membership { get; set; }
-        public DbSet<ContactMsg> ContactMsgs { get; set; }
-        public DbSet<PasswordReset> PasswordResets { get; set; }
-        public DbSet<ListingAddition> ListingAdditions { get; set; }
+        public DbSet<webpages_Roles> webpages_Roles { get; set; }
     }
 }

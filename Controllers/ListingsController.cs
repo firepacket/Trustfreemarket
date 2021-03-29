@@ -163,7 +163,7 @@ namespace AnarkRE.Controllers
             if (list == null || !list.IsAlive())
                 return RedirectToAction("notfound", "error");
 
-            var feeds = list.UserProfile.FeedbacksAbout.OrderByDescending(s => s.CreatedDate)
+            var feeds = list.User.FeedbacksAbout.OrderByDescending(s => s.CreatedDate)
             .Select(s => new FeedbackView()
             {
                 Date = s.CreatedDate,
@@ -199,9 +199,9 @@ namespace AnarkRE.Controllers
                 Additions = list.ListingAdditions.ToList(),
                 FeedBadge = new FeedbackBadgeModel()
                 {
-                    Sales = list.UserProfile.FeedbacksAbout.Count,
-                    Username = list.UserProfile.UserName,
-                    Score = list.UserProfile.SellerScore
+                    Sales = list.User.FeedbacksAbout.Count,
+                    Username = list.User.UserName,
+                    Score = list.User.SellerScore
                 },
                 FeaturedDate = list.FeaturedDate,
                 OpenTransctions = list.Escrows.Where(s => s.ClosedDt == null).Count(),
@@ -331,7 +331,7 @@ namespace AnarkRE.Controllers
                         "<p><b>Message:</b></p>" +
                         "<p><pre>" + System.Web.HttpUtility.HtmlEncode(msg) + "</pre></p>" +
                         "<p><b><a href='mailto:" + data.Users.GetByID(WebSecurity.CurrentUserId).Email + "'>Send Reply</a></b></p>";
-                            Globals.SendEmail(list.UserProfile.Email, "Contacted by user: " + WebSecurity.CurrentUserName, emailBodyText);
+                            Globals.SendEmail(list.User.Email, "Contacted by user: " + WebSecurity.CurrentUserName, emailBodyText);
                             data.ContactMsgs.Insert(cm);
                             data.Save();
                         }

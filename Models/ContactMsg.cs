@@ -19,6 +19,6 @@ namespace AnarkRE.Models
         public System.Guid ListingId { get; set; }
     
         public virtual Listing Listing { get; set; }
-        public virtual User UserProfile { get; set; }
+        public virtual User User { get; set; }
     }
 }

@@ -51,8 +51,8 @@ namespace AnarkRE.Models
                 PriceBtc = this.GetPriceBtc(),
                 PriceUsd = this.GetPriceUsd(),
                 Category = this.Catagory.Name,
-                Username = this.UserProfile.UserName,
-                Score = this.UserProfile.SellerScore,
+                Username = this.User.UserName,
+                Score = this.User.SellerScore,
                 IsBrowse = isBrowse
             };
         }

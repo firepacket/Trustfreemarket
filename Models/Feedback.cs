@@ -23,8 +23,8 @@ namespace AnarkRE.Models
         public System.DateTime CreatedDate { get; set; }
         public bool AboutSeller { get; set; }
     
+        public virtual Listing Listing { get; set; }
         public virtual User UserFrom { get; set; }
         public virtual User UserAbout { get; set; }
-        public virtual Listing Listing { get; set; }
     }
 }

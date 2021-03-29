@@ -10,7 +10,7 @@ namespace AnarkRE.Controllers
 {
     public class HomeController : BaseController
     {
-        [InitializeSimpleMembershipAttribute] // REMOVE THIS AFTER RUNNING FIRST TIME!!
+
         public ActionResult Index()
         {
             var features = data.Listings.Get(s => s.FeaturedDate.HasValue 
@@ -22,8 +22,8 @@ namespace AnarkRE.Controllers
                     ExpireDt = s.ExpireDate,
                     ListId = s.ListingId.StringWithoutDashes(),
                     Price = new Price(s.PriceCUR, s.PegCurrency),
-                    SellerScore = s.UserProfile.SellerScore,
-                    SellerUser = s.UserProfile.UserName,
+                    SellerScore = s.User.SellerScore,
+                    SellerUser = s.User.UserName,
                     Title = s.Title
                 }).ToList();
 

@@ -13,7 +13,7 @@ namespace AnarkRE
         Arbitrating = 3
     }
 
-    public enum EscrowClosedBy
+    public enum EscrowClosedBy : int
     {
         Buyer = 0,
         Seller = 1,
@@ -21,7 +21,11 @@ namespace AnarkRE
         ArbitForBuyer = 3,
         ArbitForSeller = 4,
         SellerReject = 5,
-        BuyerCancel = 6
+        BuyerCancel = 6,
+        BuyerRelease = 7,
+        SellerNoship = 8,
+        SellerRelease = 9,
+        SellerCancel = 10
     }
 
     public enum ListingAdditionType

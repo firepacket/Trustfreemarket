@@ -39,7 +39,7 @@ namespace AnarkRE.Content
                     if (!form.PubKey.StartsWith("-----BEGIN PUBLIC KEY-----\nMI") ||
                         !form.PubKey.EndsWith("-----END PUBLIC KEY-----"))
                         ModelState.AddModelError("PubKey", "Invalid public key");
-                    if (list.UserProfile.UserId == WebSecurity.CurrentUserId) // cant buy own item
+                    if (list.User.UserId == WebSecurity.CurrentUserId) // cant buy own item
                         ModelState.AddModelError("id", "Cannot buy own item");
                     if (list.ListingAdditions.Any(s => (ListingAdditionType)s.AdditionType == ListingAdditionType.Shipping)
                     && (!form.ShippingId.HasValue
@@ -99,7 +99,7 @@ namespace AnarkRE.Content
                             "<p>Click <a href=\"https://anark.it/escrow/\">here</a> to view your transactions</p><br/>" +
                             "<p>You may contact the buyer at <a href=\"mailto:" + buyer.Email + "\">" + buyer.Email + "</a></p>" +
                             "<p>For extra security, ask for the Session Code from the buyer if he has not already emailed it to you.</p>";
-                                Globals.SendEmail(list.UserProfile.Email, "You have a purchase request!", emailBodyText);
+                                Globals.SendEmail(list.User.Email, "You have a purchase request!", emailBodyText);
 
                         }
                         catch (Exception err)
@@ -107,7 +107,7 @@ namespace AnarkRE.Content
                             return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Failed to save");
                         }
 
-                        return Request.CreateResponse(HttpStatusCode.Created, list.UserProfile.Email);
+                        return Request.CreateResponse(HttpStatusCode.Created, list.User.Email);
                         
                     }
                 }

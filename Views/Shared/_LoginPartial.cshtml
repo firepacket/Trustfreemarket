@@ -1,21 +1,30 @@
-﻿
-@if (Request.IsAuthenticated) {
-<div class="account pull-right">
-    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
-        @Html.AntiForgeryToken()
-    <ul class="nav nav-pills">
-        <li>@Html.ActionLink(User.Identity.Name, "manage", "account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage", style = User.IsInRole("admin") ? "color: #ff5e5e" : "color: #49afcd" })</li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
-    }
-</div>
-} else {
-    
+﻿@using AnarkRE
+@if (Request.IsAuthenticated)
+{
     <div class="account pull-right">
-    <ul class="nav nav-pills">
-        <li>@Html.ActionLink("Register", "register", "account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "login", "account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-    </ul>
-</div>
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <ul class="nav nav-pills" style="font-size:10px">
+                @*<li style="padding-top:2px; padding-right:10px; font-size:12px; color: lightgreen">Availble: 0 BTC</li>
+                    <li style="padding-top:2px; padding-right:10px; font-size:12px; color: goldenrod">Escrow: 0 BTC</li>*@
+
+                <li>@Html.ActionLink(User.Identity.Name, "manage", "account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage", style = "font-size:16px; padding-right:7px; padding-bottom:0px; text-decoration:underline;border-right:0px;" + (User.IsInRole("admin") ? "color: #ff5e5e" : "color: #49afcd") })</li>
+                <li style="line-height:10px; padding-top:3px; color:#fefefe; padding-right:5px; border-right: 1px solid #fff;">Buyer: <span style="color:@Globals.ScoreColor((decimal?)TempData[ "buyerscore" ])">@(((decimal?)TempData[ "buyerscore" ]).HasValue ? ((decimal?)TempData[ "buyerscore" ]).Value.ToString() : "?")</span><br />Seller: <span style="color:@Globals.ScoreColor((decimal?)TempData[ "sellerscore" ])">@(((decimal?)TempData[ "sellerscore" ]).HasValue ? ((decimal?)TempData[ "sellerscore" ]).Value.ToString() : " ?")</span></li>
+                <li style="line-height:10px; padding-top:3px; color:#fefefe; padding-left:5px; ">Released: <span style="color:lightgreen">@TempData[ "released" ] BTC</span><br />Escrow: <span style="color:goldenrod">@TempData[ "escrow" ] BTC</span></li>
+                <li style="line-height:10px;"><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            </ul>
+        }
+    </div>
+}
+else
+{
+
+    <div class="account pull-right">
+        <ul class="nav nav-pills">
+            <li>@Html.ActionLink("Register", "register", "account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+            <li>@Html.ActionLink("Log in", "login", "account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    </div>
 }
 
