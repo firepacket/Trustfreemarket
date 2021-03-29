@@ -27,11 +27,13 @@ STEPS TO SET UP
 Questions or comments may be sent to admin@trustfree.market
 
 
+-------
+
 P.S. It's 2021 and there's still no decent bitcoin marketplace. We plan on changing that.
-We will also be correcting issues in this code that prevented many of you from being able to run this yourselves.
+We will also be correcting issues in this code that prevented many of you from being able to run this yourselves. You will find the instructions will now work, you just have to add all the references in the packages directory.
 
 We have some new features including an encrypted chat between buyer and seller with strong client side encryption (AES 256 CBC /w RIPEMD160 Authentication (new IV each msg))
-Arbitration built into the GUI allows for release of the encryptionn chat key to us but NOT your escrow keys (Totally seperate and optional!)
+Arbitration built into the GUI allows for release of the encryptionn chat key to us but NOT your escrow keys (Totally seperate and optional!) This will all be open-sourced!
 
 Websockets and slowpolling, so you can execute your trades faster in chat and feel confident nobody can see your address or personal details.
 Userprofiles and a focus on the feedback system are top priorities.
