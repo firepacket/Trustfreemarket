@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AnarkRE.Models;
+using AnarkRE.Filters;
 
 namespace AnarkRE.Controllers
 {
