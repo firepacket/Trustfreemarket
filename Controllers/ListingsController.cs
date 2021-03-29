@@ -72,7 +72,6 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [InitializeSimpleMembership]
         public ActionResult Create(NewListingModel form)
         {
             Price price = new Price(form.Price, form.PegCurrency);
