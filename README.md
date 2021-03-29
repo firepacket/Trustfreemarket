@@ -19,9 +19,23 @@ Other features include thumbnails, featured listings, moderation features, and a
 
 STEPS TO SET UP
 
-1. Update web.config with the connection string for your databases. (both debug and production)
+1. Update web.config with the connection string for your databases. (both debug (update: no more debug db) and production)
 2. Generate the database from /Models/SiteDB.edmx
 2. Update SendEmail() in Globals.cs in the root folder with your SMTP credentials
 3. Build and run. You may login with admin/admin
 
 Questions or comments may be sent to admin@trustfree.market
+
+
+P.S. It's 2021 and there's still no decent bitcoin marketplace. We plan on changing that.
+We will also be correcting issues in this code that prevented many of you from being able to run this yourselves.
+
+We have some new features including an encrypted chat between buyer and seller with strong client side encryption (AES 256 CBC /w RIPEMD160 Authentication (new IV each msg))
+Arbitration built into the GUI allows for release of the encryptionn chat key to us but NOT your escrow keys (Totally seperate and optional!)
+
+Websockets and slowpolling, so you can execute your trades faster in chat and feel confident nobody can see your address or personal details.
+Userprofiles and a focus on the feedback system are top priorities.
+
+We also plan on allowing you to spend your coins directly from escrow on the site without having to sweep the key like a paperwallet (if you choose to pay the miner fee).
+
+Keep checking back to see how we've implemented these features and let us know of any concerns!
