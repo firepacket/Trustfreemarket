@@ -30,11 +30,11 @@ namespace AnarkRE
             //OAuthWebSecurity.RegisterGoogleClient();
             if (!WebSecurity.Initialized)
             {
-#if DEBUG
-                WebSecurity.InitializeDatabaseConnection("DefaultConnectionDebug", "UserProfile", "UserId", "UserName", autoCreateTables: true);
-#else
-                WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
-#endif
+//#if DEBUG
+//                WebSecurity.InitializeDatabaseConnection("DefaultConnectionDebug", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+//#else
+                WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "UserName", autoCreateTables: true);
+//#endif
             }
         }
     }
