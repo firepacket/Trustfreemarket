@@ -410,10 +410,6 @@
             <End Role="Listings" EntitySet="Listings" />
           </AssociationSet>
           <EntitySet Name="webpages_Membership" EntityType="SiteDBModel.webpages_Membership" />
-          <AssociationSet Name="FK_UserProfile_webpages_Membership" Association="SiteDBModel.FK_UserProfile_webpages_Membership">
-            <End Role="webpages_Membership" EntitySet="webpages_Membership" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
           <AssociationSet Name="FK_Feedback_Listings" Association="SiteDBModel.FK_Feedback_Listings">
             <End Role="Listing" EntitySet="Listings" />
             <End Role="Feedback" EntitySet="Feedbacks" />
@@ -550,7 +546,6 @@
           <NavigationProperty Name="FeedbacksFrom" Relationship="SiteDBModel.FK_Feedback_UserProfile" FromRole="UserProfile" ToRole="Feedback" />
           <NavigationProperty Name="FeedbacksAbout" Relationship="SiteDBModel.FK_Feedback_UserProfile1" FromRole="UserProfile" ToRole="Feedback" />
           <NavigationProperty Name="Listings" Relationship="SiteDBModel.FK_Listings_UserProfile" FromRole="UserProfile" ToRole="Listings" />
-          <NavigationProperty Name="webpages_Membership" Relationship="SiteDBModel.FK_UserProfile_webpages_Membership" FromRole="User" ToRole="webpages_Membership" />
           <Property Type="Decimal" Name="SellerScore" Precision="3" Scale="2" />
           <Property Type="Decimal" Name="BuyerScore" Precision="3" Scale="2" />
           <Property Type="Decimal" Name="TotalScore" Precision="3" Scale="2" />
@@ -668,20 +663,7 @@
           <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="PasswordVerificationToken" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="PasswordVerificationTokenExpirationDate" Precision="3" />
-          <NavigationProperty Name="UserProfile" Relationship="SiteDBModel.FK_UserProfile_webpages_Membership" FromRole="webpages_Membership" ToRole="User" />
         </EntityType>
-        <Association Name="FK_UserProfile_webpages_Membership">
-          <End Type="SiteDBModel.webpages_Membership" Role="webpages_Membership" Multiplicity="1" />
-          <End Type="SiteDBModel.User" Role="User" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="webpages_Membership">
-              <PropertyRef Name="UserId" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Feedback_Listings">
           <End Type="SiteDBModel.Listing" Role="Listing" Multiplicity="1" />
           <End Type="SiteDBModel.Feedback" Role="Feedback" Multiplicity="*" />

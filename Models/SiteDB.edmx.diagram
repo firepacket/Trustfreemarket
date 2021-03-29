@@ -20,7 +20,6 @@
         <AssociationConnector Association="SiteDBModel.FK_Feedback_UserProfile1" ManuallyRouted="false" />
         <AssociationConnector Association="SiteDBModel.FK_Listings_UserProfile" ManuallyRouted="false" />
         <EntityTypeShape EntityType="SiteDBModel.webpages_Membership" Width="1.5" PointX="1" PointY="10" />
-        <AssociationConnector Association="SiteDBModel.FK_UserProfile_webpages_Membership" />
         <AssociationConnector Association="SiteDBModel.FK_Feedback_Listings" ></AssociationConnector>
         <EntityTypeShape EntityType="SiteDBModel.ContactMsg" Width="1.5" PointX="7" PointY="3.25" />
         <EntityTypeShape EntityType="SiteDBModel.PasswordReset" Width="1.5" PointX="7.9616296943098437" PointY="4.8059323005405874" />

@@ -38,7 +38,6 @@ namespace AnarkRE.Models
         public virtual ICollection<Feedback> FeedbacksFrom { get; set; }
         public virtual ICollection<Feedback> FeedbacksAbout { get; set; }
         public virtual ICollection<Listing> Listings { get; set; }
-        public virtual webpages_Membership webpages_Membership { get; set; }
         public virtual ICollection<ContactMsg> ContactMsgs { get; set; }
         public virtual ICollection<PasswordReset> PasswordResets { get; set; }
     }
