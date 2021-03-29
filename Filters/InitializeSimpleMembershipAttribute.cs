@@ -11,6 +11,10 @@ using System.Web.Security;
 
 namespace AnarkRE.Filters
 {
+    /// <summary>
+    /// Use this *once* to create the tables required for ASP Simplemembership within your standard database.
+    /// Also creates "admin:admin123" user account along with the ASP admin Role.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class InitializeSimpleMembershipAttribute : ActionFilterAttribute
     {
@@ -21,7 +25,7 @@ namespace AnarkRE.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             // Ensure ASP.NET Simple Membership is initialized only once per app start
-            //LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
+            LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
         }
 
         private class SimpleMembershipInitializer
@@ -41,26 +45,28 @@ namespace AnarkRE.Filters
                         }
                     }
 
-#if DEBUG
-                    WebSecurity.InitializeDatabaseConnection("DefaultConnectionDebug", "UserProfile", "UserId", "UserName", autoCreateTables: true);
-#else
-                    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
-#endif
+//#if DEBUG
+//                    WebSecurity.InitializeDatabaseConnection("DefaultConnectionDebug", "Users", "UserId", "UserName", autoCreateTables: true);
+//#else
+                    if (!WebSecurity.Initialized)
+                    {
+                        WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "UserName", autoCreateTables: true);
+                    }
+//#endif
 
                     var roles = (SimpleRoleProvider)Roles.Provider;
                     var membership = (SimpleMembershipProvider)Membership.Provider;
 
                     if (!roles.RoleExists("admin"))
                         roles.CreateRole("admin");
-                    
-                    if (membership.GetUser("default", false) == null)
-                        membership.CreateUserAndAccount("default", "temp123!");
+                    if (!roles.RoleExists("arbiter"))
+                        roles.CreateRole("arbiter");
 
                     if (membership.GetUser("admin", false) == null)
-                        membership.CreateUserAndAccount("admin", "admin");
-
-                    if (!roles.GetRolesForUser("default").Contains("admin"))
-                        roles.AddUsersToRoles(new[] { "default" }, new[] { "admin" });
+                        WebSecurity.CreateUserAndAccount("admin", "admin", propertyValues: new
+                        {
+                            Email = "admin@trustfree.market"
+                        }, requireConfirmationToken: false);
 
                     if (!roles.GetRolesForUser("admin").Contains("admin"))
                         roles.AddUsersToRoles(new[] { "admin" }, new[] { "admin" });
