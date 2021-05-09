@@ -16,10 +16,16 @@ namespace AnarkRE
     public static class Globals
     {
       
-        public const int ListingDays = 90;
-        public const int MaxPictures = 10;
-        public const int MaxUserListings = 5;
-        public const decimal MinListingPriceUsd = 0.50M;
+        public const int ListingDays = 365;
+        public const int MaxPictures = 15;
+        public const int MaxUserListings = 10;
+        public const decimal MinListingPriceUsd = 1M;
+        public const int CancelIfNotShippedDays = 8;
+        public const int AutoReleaseAfterShippedDays = 11;
+        public const int BuyerExtendAutoreleaseDays = 5;
+        public const int LoginMinutes = 30;
+        public const int BTCRateUpdateMin = 9;
+        public const int PWResetHrs = 2;
 
         public static string PicturePath = HostingEnvironment.MapPath("~/App_Data/pictures");
 
@@ -148,5 +154,28 @@ namespace AnarkRE
             }
         }
         
+        public static Dictionary<string, int> GetCatCount()
+        {
+            Dictionary<string, int> count = new Dictionary<string, int>();
+            using (SiteDBEntities db = new SiteDBEntities())
+            {
+                foreach (var c in db.Catagories)
+                    count.Add(c.Name, c.Listings.Where(s => !s.IsDeleted
+                && s.IsApproved && !s.IsPrivate
+                && DateTime.Now <= s.ExpireDate).Count());
+                return count;
+            }
+        }
+
+        public static decimal? GetScore(int userid, bool buyer)
+        {
+            using (SiteDBEntities db = new SiteDBEntities())
+            {
+                User usr = db.Users.SingleOrDefault(s => s.UserId == userid);
+                if (usr == null)
+                    return null;
+                return buyer ? usr.BuyerScore : usr.SellerScore;
+            }
+        }
     }
 }
