@@ -23,6 +23,7 @@ STEPS TO SET UP
 2. Generate the database from /Models/SiteDB.edmx
 3. Update SendEmail() in Globals.cs in the root folder with your SMTP credentials
 4. Add all the missing references from the packages folder. It may be tedeous to do by hand but you only have to do it once!
+The nuget.config should allow you to Install-Package from the Newget console.
 5. Build and run. You may login with admin/admin
 6. You have to add your own Categories in the Categories table. It doesn't happen automatically
 
