@@ -1,11 +1,21 @@
-﻿
+﻿@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="row">
     <div class="span9">
-        <h1 class="page-header">Error</h1>
-        <p class="lead">We could not complete your request. If this was a legitimate request, please contact support describing what happened.</p>
+        <h1 class="page-header">Too Aggressive</h1>
+
+        <p class="lead">This action is rate limited.</p>
+        <div>@(TempData[ "msg" ] ?? "")</div>
+        <br/>
         <a href="@Url.Action("index", "home")" class="btn btn-large btn-primary">Home</a>
     </div>
 </div>
+
 @section Scripts {
     <script>history.pushState({}, null, window.location.href.replace(/[?].*/, ""))</script>
 }
+
+

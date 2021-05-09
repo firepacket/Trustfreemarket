@@ -1,6 +1,8 @@
-﻿<div class="not-found">
+﻿
+<div class="not-found" style="text-align:center">
             <strong>404</strong>
             <h1>The page cannot be found.</h1>
+    <a href="@Url.Action("index", "home")" class="btn btn-large btn-primary">Home</a>
             <hr>
             @*<form action="?" method="post">
                     <div class="container-inline">
@@ -15,3 +17,7 @@
                 Please use search box or <a href="index.html">return back</a>
             </p>*@
         </div>
+
+@section Scripts {
+    <script>history.pushState({}, null, window.location.href.replace(/[?].*/, ""))</script>
+}

@@ -1,8 +1,12 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="row">
     <div class="span9">
-        <h1 class="page-header">Error</h1>
-        <p class="lead">We could not complete your request. If this was a legitimate request, please contact support describing what happened.</p>
+        <h1 class="page-header">Bad Format Request</h1>
+
+            <p class="lead">Your request was malformed and we could not understand it or will not process it.</p>
         <a href="@Url.Action("index", "home")" class="btn btn-large btn-primary">Home</a>
     </div>
 </div>
