@@ -13,6 +13,7 @@ using AnarkRE.Filters;
 using System.IO;
 using WebMatrix.WebData;
 using System.Web.Routing;
+using AnarkRE.Security;
 
 namespace AnarkRE.Controllers
 {
@@ -21,6 +22,7 @@ namespace AnarkRE.Controllers
     {
 
         [Authorize]
+        [NoCacheAfterLogout]
         public ActionResult Index()
         {
             ViewBag.Title = "My Listings";
@@ -30,7 +32,7 @@ namespace AnarkRE.Controllers
                 .Select(s => s.ToGridItem(false)).AsQueryable());
         }
 
-        
+        [OutputCache(Duration = int.MaxValue)]
         public ActionResult Images(string id)
         {
             if (id.Contains("_"))
@@ -61,6 +63,7 @@ namespace AnarkRE.Controllers
         }
 
         [Authorize]
+        [NoCacheAfterLogout]
         public ActionResult Create()
         {
             ViewBag.Title = "Create new listing";
@@ -72,6 +75,8 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Throttle(Message = "Please slow down", Name = "Login", Seconds = 12, Order = 1)]
+        [NoCacheAfterLogout]
         public ActionResult Create(NewListingModel form)
         {
             Price price = new Price(form.Price, form.PegCurrency);
@@ -131,6 +136,7 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult AddPic(ListingView listpic)
         {
             string[] formats = new string[] { ".jpg", ".png", ".gif", ".jpeg" }; 
@@ -259,6 +265,7 @@ namespace AnarkRE.Controllers
 
         [Authorize]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Delete(Guid id)
         {
             Listing list = data.Listings.GetByID(id);
@@ -311,6 +318,7 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Message(Guid id, string msg)
         {
             if (msg.Length > 12 && msg.Length <= 600)
@@ -347,6 +355,7 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Addition(Guid id, string name, decimal? price, ListingAdditionType latype)
         {
             if (name.Length <= 50 && name.Length > 1 && price.HasValue && price.Value >= 0 
@@ -377,6 +386,7 @@ namespace AnarkRE.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Append(Guid id, string descadd)
         {
             if (descadd.Length <= 500 && descadd.Length > 3)
@@ -403,6 +413,7 @@ namespace AnarkRE.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Feature(Guid id, bool featured)
         {
             Listing list = data.Listings.GetByID(id);

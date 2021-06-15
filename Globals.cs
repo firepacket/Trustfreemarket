@@ -9,6 +9,7 @@ using System.Net.Security;
 using System.Web.Hosting;
 using System.Threading;
 using AnarkRE.Models;
+using AnarkRE.Security;
 
 
 namespace AnarkRE
@@ -28,6 +29,8 @@ namespace AnarkRE
         public const int PWResetHrs = 2;
 
         public static string PicturePath = HostingEnvironment.MapPath("~/App_Data/pictures");
+        static object lockAppend = new object();
+        static object lockError = new object();
 
         public static Dictionary<ListingAdditionType, int> ListAddOpts = new Dictionary<ListingAdditionType, int>()
         {
@@ -71,37 +74,63 @@ namespace AnarkRE
 
         public static void WriteError(string filename, Exception err)
         {
-            try
+             lock (lockError)
             {
+                bool tried = false;
                 string path = HostingEnvironment.MapPath("~/App_Data/" + filename);
-                using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.Append)))
+                try
                 {
-                    writer.WriteLine("");
-                    writer.WriteLine("------------");
-                    writer.WriteLine("Date: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
-                    writer.WriteLine("Message: " + err.Message);
-                    writer.WriteLine("Trace: " + err.StackTrace);
-                    writer.WriteLine("Inner: " + err.InnerException);
+                    using (FileStream fs = new FileStream(path, FileMode.Append))
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+                        writer.WriteLine("");
+                        writer.WriteLine("------------");
+                        writer.WriteLine("Date: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+                        writer.WriteLine("Type: " + err.GetType().ToString());
+                        writer.WriteLine("Message: " + err.Message);
+                        writer.WriteLine("Trace: " + err.StackTrace);
+                        writer.WriteLine("Inner: " + err.InnerException);
+                       
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (!tried)
+                    {
+                        WriteError(MyCrypto.GenerateRandomNumber(0, 9) + filename, err);
+                        tried = true;
+                    }
+
+                    if (tried) ; // Uncomment this if you want to get notified of errors if they for some reason coudln't be written to the log
+                        //SendEmail("your@email.com", "Failed to write: " + filename + "(" + e.Message + ")", "------------<br>Date: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + "<br>Message: " + err.Message + "<br>Trace: " + err.StackTrace + "<br>Inner: " + e.Message + "<br>" + e.StackTrace + "<br>Data: " + data.Replace(Environment.NewLine, "<br>"));
                 }
             }
-            catch { }
         }
 
         public static void AppendFile(string filename, string text)
         {
-            try
+            if (string.IsNullOrEmpty(text))
+                return;
+            lock (lockAppend)
             {
                 string path = HostingEnvironment.MapPath("~/App_Data/" + filename);
-                using (StreamWriter writer = new StreamWriter(new FileStream(path, FileMode.Append)))
+                try
                 {
-                    
-                    writer.WriteLine("");
-                    writer.WriteLine("------------");
-                    writer.WriteLine("Date: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
-                    writer.WriteLine(text);
+                    using (FileStream fs = new FileStream(path, FileMode.Append))
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+
+                        writer.WriteLine("");
+                        writer.WriteLine("------------");
+                        writer.WriteLine("Date: " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+                        writer.WriteLine(text);
+                    }
+                }
+                catch (Exception err)
+                {
+                    WriteError("appendfileERR.log", err);
                 }
             }
-            catch { }
         }
 
         public static string ScoreColor(decimal? score)

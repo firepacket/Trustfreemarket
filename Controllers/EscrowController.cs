@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Net;
 using System.Net.Http;
 using WebMatrix.WebData;
-
+using AnarkRE.Filters;
 using AnarkRE.Models;
 using AnarkRE.DAL;
 using Casascius.Bitcoin;
@@ -15,6 +15,8 @@ using Casascius.Bitcoin;
 namespace AnarkRE.Controllers
 {
     [Authorize]
+    [NoCacheAfterLogout]
+    [HandleError(ExceptionType = typeof(HttpAntiForgeryException), View = "~/Views/Error/Expired.cshtml")]
     public class EscrowController : BaseController
     {
         public ActionResult Index()

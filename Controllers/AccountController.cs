@@ -7,11 +7,12 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
-
+using AnarkRE.Security;
 using WebMatrix.WebData;
 using AnarkRE.Filters;
 using AnarkRE.Models;
 using System.Web.Helpers;
+
 
 namespace AnarkRE.Controllers
 {
@@ -34,7 +35,9 @@ namespace AnarkRE.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [Throttle(Message = "Please slow down", Name = "Login", Seconds = 4, Order = 1)]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -100,17 +103,11 @@ namespace AnarkRE.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Throttle(Message = "Registering accounts too fast", Name = "Register", Seconds = 600, Order = 1)]
         public ActionResult Register(RegisterModel model)
         {
-#if DEBUG
-            using (SiteDBEntities db = new SiteDBEntities(true))
-#else
-            using (SiteDBEntities db = new SiteDBEntities(false))
-#endif
-            {
-                if (db.Users.Any(s => s.Email.ToLower() == model.Email.ToLower()))
-                    ModelState.AddModelError("", "Email already exists");
-            }
+            if (data.Users.context.Users.Any(s => s.Email.ToLower() == model.Email.ToLower()))
+                ModelState.AddModelError("", "Email already exists");
             
             if (ModelState.IsValid)
             {
@@ -168,7 +165,7 @@ namespace AnarkRE.Controllers
 
         //
         // GET: /Account/Manage
-
+        [NoCacheAfterLogout]
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -183,9 +180,10 @@ namespace AnarkRE.Controllers
 
         //
         // POST: /Account/Manage
-
+        [Throttle(Message = "You are attempting to change passwords too fast", Name = "AccountManagePW", Seconds = 3, Order = 1)]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NoCacheAfterLogout]
         public ActionResult Manage(LocalPasswordModel model)
         {
             bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
@@ -247,19 +245,18 @@ namespace AnarkRE.Controllers
         }
 
 
-
         #region Helpers
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        }
+        //private ActionResult RedirectToLocal(string returnUrl)
+        //{
+        //    if (Url.IsLocalUrl(returnUrl))
+        //    {
+        //        return Redirect(returnUrl);
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //}
 
         public enum ManageMessageId
         {
@@ -323,5 +320,6 @@ namespace AnarkRE.Controllers
             }
         }
         #endregion
+
     }
 }

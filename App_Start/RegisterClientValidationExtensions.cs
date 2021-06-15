@@ -12,7 +12,8 @@ namespace AnarkRE.App_Start {
         public static void Start() {
             DataAnnotationsModelValidatorProviderExtensions.RegisterValidationExtensions();
             ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
-            
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
     }
 }
